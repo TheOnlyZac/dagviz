@@ -4,13 +4,17 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "electromon .",
     "start": "electron ."
   },
   "author": "TheOnlyZac",
   "license": "ISC",
   "devDependencies": {
+    "electromon": "^1.0.10",
     "electron": "^13.1.7",
     "memoryjs": "^3.4.0"
+  },
+  "dependencies": {
+    "d3-graphviz": "^4.0.0"
   }
 }
