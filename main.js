@@ -112,7 +112,6 @@ class DAG {
     // generate the dog language text for the graph
     dot() {
         let clusters = {};
-
         let dotString = 'digraph {\n';
 
         // group all nodes in dag by cluster
@@ -180,7 +179,6 @@ app.whenReady().then(() => {
     win = createWindow();
     
     let dag = new DAG();
-    console.log(dag.dot());
     setInterval(() => {
         win.webContents.send('dot-text', dag.dot());
     }, 1000);
