@@ -124,7 +124,7 @@ class Graph {
     // generate the dog language text for the graph
     dot() {
         if (this.head != this.lastHead) this.populateGraph();
-        let dotString = 'digraph {\n';
+        let dotString = 'digraph {\ngraph [bgcolor="#ffffff00"]\n';
 
         // populate each cluster with node strings
         for (const [id, cluster] of Object.entries(this.clusters)) {
@@ -179,6 +179,8 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 500,
         height: 700,
+        transparent: true,
+        frame: false,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -190,7 +192,7 @@ function createWindow() {
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 
     // Return the new BrowserWindow
     return win;

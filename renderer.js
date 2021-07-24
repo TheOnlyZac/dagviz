@@ -27,6 +27,7 @@ function render() {
 window.onresize = function() {
     width = window.innerWidth - margin;
     height = window.innerHeight - margin;
+    render();
 }
 
 ipcRenderer.on('dot-text', function (event,store) {
