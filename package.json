@@ -5,12 +5,14 @@
   "main": "main.js",
   "scripts": {
     "test": "electromon .",
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-packager . DAGViewer --platform=win32 --arch=x86_64"
   },
   "author": "TheOnlyZac",
   "license": "ISC",
   "devDependencies": {
     "electromon": "^1.0.10",
+    "electron-packager": "^15.3.0",
     "electron": "^13.1.7",
     "memoryjs": "^3.4.0"
   },

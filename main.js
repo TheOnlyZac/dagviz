@@ -1,3 +1,5 @@
+'use strict'
+
 // Set up packages
 const { app, BrowserWindow, webContents } = require('electron');
 const ipcRenderer = require('electron').ipcRenderer;
@@ -19,8 +21,7 @@ class Node {
         return readMemory(this.address + 0x54, memoryjs.UINT32);
     }
     set state(val) {
-        // todo
-        return
+        writeMemory(this.address + 0x54, val, memoryjs.UINT32);
     }
 
     // get the job pointer for the task
@@ -58,7 +59,7 @@ class Node {
 
     // generate the dot language text for the node
     dotNode() {
-        let dotString = `"${hex(this.address)}" ${this.style}\n`
+        let dotString = `"${hex(this.address)}" ${this.style}`
         return dotString
     }
 
@@ -66,16 +67,18 @@ class Node {
         let dotString = ""
         let edges = this.edges;
         for (const e of edges) {
-            dotString += `"${hex(this.address)}" -> "${hex(e)}"\n`
+            dotString += `"${hex(this.address)}" -> "${hex(e)}"`
         }
         return dotString;
     }
 }
 
-class DAG {
+class Graph {
     constructor() {
-        this.nodes = {};
-        this.refresh();
+        this.lastHead = this.head;
+        this.clusters = {};
+        this.edgeText = '';
+        this.populateGraph();
     }
 
     // get the head of the dag from game memory
@@ -84,26 +87,35 @@ class DAG {
         return readMemory(0x3e0b04, memoryjs.UINT32);
     }
 
-    // clear and regenerate the dag
-    refresh() {
-        this.nodes = {};
-        this.populateChildren(this.head)
+    populateGraph() { 
+        this.clusters = {};
+        this.edgeText = '';   
+        var visited  = []
+        this.populateChildren(this.head, visited)
     }
 
     // recursively populate the dag with a node and it's children
-    populateChildren(nodeAddress) {
+    populateChildren(nodeAddress, visited) {
         //console.log('populateChildren>');
+        if (visited.indexOf(nodeAddress) > 0) return;
+
+        visited.push(nodeAddress);
         let node = new Node(nodeAddress);
 
-        // add node to dag
-        this.nodes[nodeAddress] = node;
+        // add node to cluster in dag based on job
+        let job = node.job
+        if (!(job in this.clusters)) this.clusters[job] = new Subgraph(job);
+        this.clusters[node.job].nodes.push(node);
+        
+        // add node edges to graph
+        this.edgeText += `\t${node.dotEdges()}\n`;
 
         // recursively add it's children to the dag
         for (const edge of node.edges) {
             //console.log(`node.edges: ${node.edges}`);
             //console.log(`checking to see if edge ${edge} is in the dag`)
-            if (!(this.edge in this.nodes)) {
-                this.populateChildren(edge);
+            if (!(this.edge in visited)) {
+                this.populateChildren(edge, visited);
             }
         }
         //console.log('<populateChildren');
@@ -111,39 +123,49 @@ class DAG {
 
     // generate the dog language text for the graph
     dot() {
-        let clusters = {};
+        if (this.head != this.lastHead) this.populateGraph();
         let dotString = 'digraph {\n';
 
-        // group all nodes in dag by cluster
-        for (let [id, node] of Object.entries(this.nodes)) {
-            if (!(node.job in clusters)) clusters[node.job] = [];
-            // add node to cluster
-            clusters[node.job].push(node);
-            // add node edges to graph
-            dotString += node.dotEdges();
-        }
-
         // populate each cluster with node strings
-        for (const [id, cluster] of Object.entries(clusters)) {
-            let clusterString = "";
-
-            if (id != 0) clusterString += `subgraph cluster${id} {\n`;
-            for (let node of cluster) {
-                clusterString += node.dotNode();
-            }
-            if (id != 0) clusterString += '}\n';
-
-            dotString += clusterString;
+        for (const [id, cluster] of Object.entries(this.clusters)) {
+            if (id == 0) dotString += cluster.dot(false)
+            else dotString += cluster.dot();
         }
 
-        dotString += '}';
+        dotString += `${this.edgeText}\n}`;
         return dotString;
     }
 }
 
-// Helper function for reading memory values
+class Subgraph {
+    constructor(id) {
+        this.id = id;
+        this.nodes = [];
+    }
+
+    // generate the dog language text for the graph
+    dot(cluster=true) {
+        let dotString = '';
+
+        if (cluster) dotString += `\tsubgraph cluster${this.id} {\n`;
+        else dotString += `\tsubgraph ${this.id} {\n`;
+
+        for (var node of this.nodes) {
+            dotString += '\t\t' + node.dotNode() + '\n'
+        }
+
+        dotString += '\t}\n';
+        return dotString;
+    }
+}
+
+// Helper functions for reading/writing memory values
 function readMemory(address, type) {
     return memoryjs.readMemory(processObject.handle, memoryBase + address, type);
+}
+
+function writeMemory(address, value, type) {
+    return memoryjs.writeMemory(processObject.handle, memoryBase + address, value, type);
 }
 
 // Convert a number to a hex string
@@ -176,9 +198,9 @@ function createWindow() {
 
 // Called after Electron finishes initialization
 app.whenReady().then(() => {
-    win = createWindow();
+    const win = createWindow();
     
-    let dag = new DAG();
+    let dag = new Graph();
     setInterval(() => {
         win.webContents.send('dot-text', dag.dot());
     }, 1000);

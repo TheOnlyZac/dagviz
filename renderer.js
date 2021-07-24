@@ -11,21 +11,16 @@ var graphviz = d3.select("#graph").graphviz()
         return d3.transition("main")
             .ease(d3.easeLinear)
             .delay(500)
-            .duration(1500)
+            .duration(500)
     })
     .on("initEnd", render)
 
 // Render dot graph
 function render() {
-    var dot = dots[dotIndex];
     graphviz
         .width(width)
         .height(height)
         .renderDot(dot)
-        .on("end", function() {
-            dotIndex = (dotIndex + 1) % dots.length;
-            render();
-        })
 }
 
 // Handle window resize event
@@ -35,7 +30,12 @@ window.onresize = function() {
 }
 
 ipcRenderer.on('dot-text', function (event,store) {
-    dots = [store]
+    dot = store;
+    if (dot != lastDot) {
+        lastDot = dot;
+        render();
+    }
 });
 
-var dots = ['digraph { a [shape="rectange" label="loading..."] }'];
+var lastDot = '';
+var dot = 'digraph { a [shape="rectange" label="loading..."] }';
