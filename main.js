@@ -249,6 +249,9 @@ app.whenReady().then(() => {
                 
                 // send the dot text to the window
                 win.webContents.send('dot-text', dag.dot());
+
+                let worldId = readMemory(0x3D4A60, memoryjs.UINT32);
+                win.webContents.send('world-id', worldId);
             }
         }, 500);
     } catch (err) {
