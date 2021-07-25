@@ -1,4 +1,8 @@
 'use strict'
+// note to future self
+// I have modified it to work with the proto, any lines with comment //retail
+// are for retail, and any linkes with comment //proto are the proto. Swap them
+// to make it work normally again 7/25/21
 
 // Import packages
 const { app, BrowserWindow, webContents } = require('electron');
@@ -23,6 +27,14 @@ const memoryBase = 0x20000000
 class Node {
     constructor(address) {
         this.address = address;
+
+        // we only populated the edges array once bc we assume it won't change
+        this.edges = [];
+        let numEdges = readMemory(this.address + 0xa0, memoryjs.UINT32); // retail: a0, proto: 94
+        let edgeArray = readMemory(this.address + 0xa4, memoryjs.UINT32); // retail: a4, proto: 98
+        for (let i = 0; i < numEdges; i++) {
+            this.edges.push(readMemory(edgeArray + i*4, memoryjs.UINT32));
+        }
     }
 
     // get/set the current state of the task (0, 1, 2, 3)
@@ -35,18 +47,8 @@ class Node {
 
     // get the job pointer for the task
     get job() {
-        return readMemory(this.address + 0x7c, memoryjs.UINT32);
-    }
-    
-    // get an array of nodes pointed to by this node
-    get edges() {
-        let edges = [];
-        let numEdges = readMemory(this.address + 0xa0, memoryjs.UINT32);
-        let edgeArray = readMemory(this.address + 0xa4, memoryjs.UINT32);
-        for (let i = 0; i < numEdges; i++) {
-            edges.push(readMemory(edgeArray + i*4, memoryjs.UINT32));
-        }
-        return edges;
+        return readMemory(this.address + 0x7c, memoryjs.UINT32); //retail
+        //return readMemory(this.address + 0x74, memoryjs.UINT32); //proto
     }
 
     // get the checkpoint for this node
@@ -70,18 +72,18 @@ class Node {
 
     // generate the dot language text for the node
     dotNode() {
-        let dotString = `"${hex(this.address)}" ${this.style}`
-        return dotString
+        let dots = `"${hex(this.address)}" ${this.style}`;
+        return dots
     }
 
     // generate the dot language text for the node's edges
     dotEdges() {
-        let dotString = ""
+        let dots = [];
         let edges = this.edges;
         for (const e of edges) {
-            dotString += `"${hex(this.address)}" -> "${hex(e)}"`
+            dots.push(`"${hex(this.address)}" -> "${hex(e)}"`);
         }
-        return dotString;
+        return dots.join('\n');
     }
 }
 
@@ -128,23 +130,23 @@ class Graph {
     // generate the dot language text for the graph
     dot() {
         // init digraph with default styles for graph/node
-        let dotString = [
+        let dots = [
             'digraph {',
             'graph [style="bold, rounded" bgcolor="#ffffff00" fontname="courier"]',
             'node [style="filled, bold, rounded" fontname="courier" fontcolor="black" shape="oval"]',
             'fillcolor="#ffffff00"'
-        ].join('\n');
+        ];
 
         // generate dot strings for each cluster and append them to the graph
         for (const [id, cluster] of Object.entries(this.clusters)) {
-            if (id == 0) dotString += cluster.dot(false)
-            else dotString += cluster.dot();
+            if (id == 0) dots.push(cluster.dot(false));
+            else dots.push(cluster.dot());
         }
 
         // append pre-populated edge strings to the graph
-        dotString += `${this.edgeText}\n}`;
+        dots.push(`${this.edgeText}}`);
 
-        return dotString;
+        return dots.join('\n');
     }
 }
 
@@ -156,20 +158,20 @@ class Subgraph {
 
     // generate the dog language text for the subgraph
     dot(cluster=true) {
-        let dotString = '';
+        let dots = [];
 
         // nodes that aren't in a job shouldn't have the cluster- prefix
-        if (cluster) dotString += `\tsubgraph cluster${hex(this.id)} {\n`;
-        else dotString += `\tsubgraph ${hex(this.id)} {\n`;
+        if (cluster) dots.push(`\tsubgraph cluster${hex(this.id)} {`);
+        else dots.push(`\tsubgraph ${hex(this.id)} {`);
 
-        dotString += `\tlabel="${hex(this.id)}"\n\tbgcolor="#ffffff40"\n`
+        dots.push(`\tlabel="${hex(this.id)}"\n\tbgcolor="#ffffff40"`);
 
         for (var node of this.nodes) {
-            dotString += '\t\t' + node.dotNode() + '\n'
+            dots.push('\t\t' + node.dotNode())
         }
 
-        dotString += '\t}\n';
-        return dotString;
+        dots.push('\t}\n');
+        return dots.join('\n');
     }
 }
 
@@ -219,15 +221,19 @@ app.whenReady().then(() => {
 
     try {
         // note: head node is pointed to by 0x826e80
-        let head = readMemory(0x3e0b04, memoryjs.UINT32);
+        let head = readMemory(0x3e0b04, memoryjs.UINT32); //retail
+        //let head = readMemory(0x003EE52C, memoryjs.UINT32); //proto
+        
         let dag = new Graph(head);
+        console.log(dag.dot());
 
         // sent dot text to window every 500ms
         setInterval(() => {
             // if not attached to pcsx2 process, exit
             if (processObject == null) process.exit(0);
 
-            let currHead = readMemory(0x3e0b04, memoryjs.UINT32);
+            let currHead = readMemory(0x3e0b04, memoryjs.UINT32); //retail
+            //let currHead = readMemory(0x003EE52C, memoryjs.UINT32); //proto
 
             // make sure dag isn't null before doing anything
             if (currHead != 0x000000) {
