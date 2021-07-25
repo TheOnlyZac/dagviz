@@ -3,7 +3,7 @@ var d3 = require('d3-graphviz');
 
 // Init graph attributes
 var dotIndex = 0;
-var margin = 20;
+var margin = 2;
 var width = window.innerWidth - margin;
 var height = window.innerHeight - margin;
 

@@ -196,8 +196,9 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 600,
         height: 800,
-        transparent: true,
-        frame: false,
+        //transparent: true,
+        //frame: false,
+        autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -209,7 +210,7 @@ function createWindow() {
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
     // Return the new BrowserWindow
     return win;
@@ -225,7 +226,7 @@ app.whenReady().then(() => {
         //let head = readMemory(0x003EE52C, memoryjs.UINT32); //proto
         
         let dag = new Graph(head);
-        console.log(dag.dot());
+        //console.log(dag.dot());
 
         // sent dot text to window every 500ms
         setInterval(() => {
