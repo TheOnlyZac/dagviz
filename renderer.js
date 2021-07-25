@@ -1,6 +1,5 @@
 var ipcRenderer = require('electron').ipcRenderer;
 var d3 = require('d3-graphviz');
-console.log(d3);
 
 // Init graph attributes
 var dotIndex = 0;
@@ -36,6 +35,7 @@ window.onresize = function() {
 // Handle receiving dot text from main.js
 ipcRenderer.on('dot-text', function (event,store) {
     dot = store;
+    // re-render graph only if received dot text is different
     if (dot != lastDot) {
         lastDot = dot;
         render();
