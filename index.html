@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
-    <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">-->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <link rel="stylesheet" type="text/css" href="main.css"/>
     <title>DAG Viewer v0.1</title>
 </head>
 <body>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
-    <script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
-    
     <div id="content">
         <div id="titlebar">
             <p>Sly 2 DAG Viewer by TheOnlyZac v0.1</p>
         </div>
-        <div id="graph" style="text-align: center;"></div>
+        
+        <div id="graph"></div>
     </div>
 
     <script src="./renderer.js"></script>
