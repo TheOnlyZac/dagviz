@@ -5,9 +5,18 @@ const { app, BrowserWindow, webContents } = require('electron');
 const ipcRenderer = require('electron').ipcRenderer;
 const path = require('path');
 
+// Set up memoryjs
 const memoryjs = require("memoryjs");
 const processName = 'pcsx2.exe';
-const processObject = memoryjs.openProcess(processName);
+
+// Try to open pcsx2 process
+let processObject;
+try {
+    processObject = memoryjs.openProcess(processName);
+} catch(err) {
+    console.log("PCSX2 not detected. Please make sure PCSX2 is open and Sly 2 NTSC is running.");
+    process.exit(1);
+}
 const memoryBase = 0x20000000
 
 // Define graph classes
@@ -52,9 +61,16 @@ class Node {
 
     // generate the style string for the dot node
     get style() {
-        let color = ['#FF0000', '#1E92FF', '#00FF00', '#B8B8B8'][this.state];
+        /* colors:
+            0: red
+            1: blue
+            2: green
+            3: gray
+        */
+        let fillcolor = ['#F77272', '#61D6F0', '#9EE89B', '#C2C2C2'][this.state];
+        let color = ['#8A0808', '#0C687D', '#207F1D', '#4E4E4E'][this.state];
         let shape = (this.checkpoint == 0xFFFFFFFF) ? 'oval' : 'diamond';
-        return `[style="filled" fillcolor="${color}" shape="${shape}"]`;
+        return `[fillcolor="${fillcolor}" color="${color}" shape="${shape}"]`;
     }
 
     // generate the dot language text for the node
@@ -74,22 +90,17 @@ class Node {
 }
 
 class Graph {
-    constructor() {
-        this.lastHead = this.head;
+    constructor(head) {
+        this.head = head;
         this.clusters = {};
         this.edgeText = '';
         this.populateGraph();
     }
 
-    // get the head of the dag from game memory
-    get head() {
-        // head node is pointed to by 0x826e80
-        return readMemory(0x3e0b04, memoryjs.UINT32);
-    }
-
     populateGraph() { 
         this.clusters = {};
-        this.edgeText = '';   
+        this.edgeText = '';
+
         var visited  = []
         this.populateChildren(this.head, visited)
     }
@@ -123,15 +134,21 @@ class Graph {
 
     // generate the dog language text for the graph
     dot() {
-        if (this.head != this.lastHead) this.populateGraph();
-        let dotString = 'digraph {\ngraph [bgcolor="#ffffff00"]\n';
+        // init graph with basic styles
+        let dotString = [
+            'digraph {',
+            'graph [style="bold, rounded" bgcolor="#ffffff00" fontname="courier"]',
+            'node [style="filled, bold, rounded" fontname="courier" fontcolor="black" shape="oval"]',
+            'fillcolor="#ffffff00"'
+        ].join('\n');
 
-        // populate each cluster with node strings
+        // generate dot strings for each cluster and append them to the graph
         for (const [id, cluster] of Object.entries(this.clusters)) {
             if (id == 0) dotString += cluster.dot(false)
             else dotString += cluster.dot();
         }
 
+        // append edge strings to the graph and return the dot text
         dotString += `${this.edgeText}\n}`;
         return dotString;
     }
@@ -147,8 +164,10 @@ class Subgraph {
     dot(cluster=true) {
         let dotString = '';
 
-        if (cluster) dotString += `\tsubgraph cluster${this.id} {\n`;
-        else dotString += `\tsubgraph ${this.id} {\n`;
+        if (cluster) dotString += `\tsubgraph cluster${hex(this.id)} {\n`;
+        else dotString += `\tsubgraph ${hex(this.id)} {\n`;
+
+        dotString += `\tlabel="${hex(this.id)}"\n\tbgcolor="#ffffff40"\n`
 
         for (var node of this.nodes) {
             dotString += '\t\t' + node.dotNode() + '\n'
@@ -177,8 +196,8 @@ function hex(num) {
 function createWindow() {
     // Initialize new window
     const win = new BrowserWindow({
-        width: 500,
-        height: 700,
+        width: 600,
+        height: 800,
         transparent: true,
         frame: false,
         webPreferences: {
@@ -201,9 +220,33 @@ function createWindow() {
 // Called after Electron finishes initialization
 app.whenReady().then(() => {
     const win = createWindow();
-    
-    let dag = new Graph();
-    setInterval(() => {
-        win.webContents.send('dot-text', dag.dot());
-    }, 1000);
+
+    try {
+        // head node is pointed to by 0x826e80
+        let head = readMemory(0x3e0b04, memoryjs.UINT32);
+        let dag = new Graph(head);
+
+        // sent dot text to window every second
+        setInterval(() => {
+            if (processObject == null) return;
+
+            let currHead = readMemory(0x3e0b04, memoryjs.UINT32);
+
+            // make sure dag isn't null before doing anything
+            if (currHead != 0x000000) {
+                // update the dag head and repopulate with nodes only if game isn't loading
+                let isLoading = (readMemory(0x003D4830, memoryjs.UINT32) == 0x1) ? true : false;
+                if ((currHead != dag.head) && !(isLoading)) {
+                    dag.head = currHead;
+                    dag.populateGraph();
+                }
+                
+                // send the dot text to the window
+                win.webContents.send('dot-text', dag.dot());
+            }
+        }, 1000);
+    } catch (err) {
+        console.log(`An error occurred. Please contact TheOnlyZac#0269 on Discord.\nError details:\n${err}`);
+        process.exit(1);
+    }
 })

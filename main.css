@@ -5,6 +5,7 @@ html, body, body * {
 
 body {
     font-family: sans-serif;
+    overflow: hidden;
 }
 
 #content {
@@ -15,13 +16,15 @@ body {
     border-radius: 3px;
     
     -webkit-app-region: no-drag;
+
+    transition: height 0.5s;
 }
 
 #titlebar {
     position: fixed;
     top: 0;
 
-    padding: 2px;
+    padding: 2px 5px 2px 5px;
 
     width: 100%;
     height: 17px;
@@ -32,4 +35,8 @@ body {
 
     background-color: rgba(0, 0, 0, 0.25);
     -webkit-app-region: drag;
+}
+
+#close-btn {
+    color: white;
 }

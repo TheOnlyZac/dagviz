@@ -1,5 +1,6 @@
 var ipcRenderer = require('electron').ipcRenderer;
 
+// Init graph attributes
 var dotIndex = 0;
 var margin = 20;
 var width = window.innerWidth - margin;
@@ -10,7 +11,7 @@ var graphviz = d3.select("#graph").graphviz()
     .transition(function() {
         return d3.transition("main")
             .ease(d3.easeLinear)
-            .delay(500)
+            .delay(0)
             .duration(500)
     })
     .on("initEnd", render)
@@ -30,6 +31,7 @@ window.onresize = function() {
     render();
 }
 
+// Handle receiving dot text from main.js
 ipcRenderer.on('dot-text', function (event,store) {
     dot = store;
     if (dot != lastDot) {
@@ -39,4 +41,4 @@ ipcRenderer.on('dot-text', function (event,store) {
 });
 
 var lastDot = '';
-var dot = 'digraph { a [shape="rectange" label="loading..."] }';
+var dot = '';
