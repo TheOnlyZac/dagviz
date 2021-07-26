@@ -60,12 +60,12 @@ class Node {
     get style() {
         /* colors:
             0: red
-            1: blue
-            2: green
+            1: green
+            2: blue
             3: gray
         */
-        let fillcolor = ['#F77272', '#61D6F0', '#9EE89B', '#C2C2C2'][this.state];
-        let color = ['#8A0808', '#0C687D', '#207F1D', '#4E4E4E'][this.state];
+        let fillcolor = ['#F77272', '#9EE89B', '#61D6F0', '#C2C2C2'][this.state];
+        let color = ['#8A0808', '#207F1D', '#0C687D', '#4E4E4E'][this.state];
         let shape = (this.checkpoint == 0xFFFFFFFF) ? 'oval' : 'diamond';
         return `[fillcolor="${fillcolor}" color="${color}" shape="${shape}"]`;
     }
@@ -210,7 +210,7 @@ function createWindow() {
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 
     // Return the new BrowserWindow
     return win;
