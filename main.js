@@ -1,12 +1,8 @@
 'use strict'
-// note to future self
-// I have modified it to work with the proto, any lines with comment //retail
-// are for retail, and any linkes with comment //proto are the proto. Swap them
-// to make it work normally again 7/25/21
 
 // Import packages
 const { app, BrowserWindow, webContents } = require('electron');
-const ipcRenderer = require('electron').ipcRenderer;
+const ipc = require('electron').ipcMain;
 const path = require('path');
 const memoryjs = require("memoryjs");
 
@@ -190,6 +186,12 @@ function hex(num) {
     return num.toString(16);
 }
 
+// Handle click event from interact.js
+ipc.on('increment-state', function(event,store) {
+    let node = new Node(parseInt(store, 16));
+    node.state = (node.state + 1) % 4;
+});
+
 // Create the browser window
 function createWindow() {
     // Initialize new window
@@ -206,11 +208,16 @@ function createWindow() {
         }
     });
 
+    // Exit app when window closed
+    win.on('closed', function() {
+        process.exit();
+    })
+
     // Load the app index.html
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
     // Return the new BrowserWindow
     return win;
