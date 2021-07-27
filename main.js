@@ -355,7 +355,11 @@ app.whenReady().then(() => {
             // if not attached to pcsx2 process, exit
             if (processObject == null) process.exit(0);
 
-            let currHead = readMemory(0x3e0b04, memoryjs.UINT32); //retail
+            let worldId = readMemory(0x3D4A60, memoryjs.UINT32);
+
+            let currHead;
+            if (worldId == 3) currHead = 0x0070DC40; // manually set head for w3
+            else currHead = readMemory(0x3e0b04, memoryjs.UINT32); //retail
             //let currHead = readMemory(0x003EE52C, memoryjs.UINT32); //proto
 
             // make sure dag isn't null before doing anything
@@ -371,8 +375,6 @@ app.whenReady().then(() => {
                 
                 // send the dot text to the window
                 win.webContents.send('dot-text', dag.dot());
-
-                let worldId = readMemory(0x3D4A60, memoryjs.UINT32);
                 win.webContents.send('world-id', worldId);
             }
         }, 500);
