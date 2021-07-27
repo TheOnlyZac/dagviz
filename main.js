@@ -107,8 +107,15 @@ class Node {
 
             if (target == UNAVAILABLE) {
                 // if target state is unavailable,
-                // parent should be unavailable
-                p.forceState(UNAVAILABLE, visited);
+                if (p.state in [UNAVAILABLE, AVAILABLE]) {
+                    // if parent state is unvailable or available,
+                    // no change to parent is needed
+                    p.forceState(p.state, visited);
+                } else {
+                    // if parent state is complete or final,
+                    // parent should be available
+                    p.forceState(AVAILABLE, visited);
+                }
             } else {
                 // if target state is available, complete, or final...
                 if (p.job == 0) {
@@ -354,7 +361,7 @@ app.whenReady().then(() => {
             let worldId = readMemory(0x3D4A60, memoryjs.UINT32);
 
             let currHead;
-            if (worldId == 3) currHead = 0x0070DC40; // manually set head for w3
+            if (worldId == 3) currHead = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set head for w3
             else currHead = readMemory(0x3e0b04, memoryjs.UINT32); //retail
             //let currHead = readMemory(0x003EE52C, memoryjs.UINT32); //proto
 
