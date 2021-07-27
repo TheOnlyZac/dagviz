@@ -19,11 +19,13 @@ try {
 }
 const memoryBase = 0x20000000
 
+// Possible task states
 const UNAVAILABLE = 0;
 const AVAILABLE = 1;
 const COMPLETE = 2;
 const FINAL = 3;
 
+// Declare DAG
 let dag;
 
 // Define graph classes
@@ -31,7 +33,7 @@ class Node {
     constructor(address) {
         this.address = address;
 
-        // we only populated the edges array once bc we assume it won't change
+        // we only populate the edges array once bc we assume it won't change
         this.edges = this.children;
     }
 
@@ -92,11 +94,9 @@ class Node {
     
     // force the state of the task, maintaining the rules of the dag
     forceState(target, visited=[], skipParents=false) {
-        //if (visited.length == 0) console.log("\nWarning: No visited array passed");
         if (visited.indexOf(this.address) > -1) return; // if already checked, skip
         visited.push(this.address); // now we're checking it, so add to visited array
 
-        //console.log(`${hex(this.address)}, ${target}`);
         if (target < 0 || target > 3) return; // if attempting to set an invalid value, abort
         if (target == this.state) return // this state is already target, abort
         if (target == 2 && this.job == 0) target = 3; // override setting a node outside a job to 2
@@ -332,7 +332,7 @@ function createWindow() {
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 
     // Return the new BrowserWindow
     return win;
@@ -348,13 +348,9 @@ app.whenReady().then(() => {
         //let head = readMemory(0x003EE52C, memoryjs.UINT32); //proto
         
         dag = new Graph(head);
-        //console.log(dag.dot());
 
         // sent dot text to window every 500ms
         setInterval(() => {
-            // if not attached to pcsx2 process, exit
-            if (processObject == null) process.exit(0);
-
             let worldId = readMemory(0x3D4A60, memoryjs.UINT32);
 
             let currHead;
