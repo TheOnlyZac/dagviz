@@ -19,26 +19,50 @@ try {
 }
 const memoryBase = 0x20000000
 
+const UNAVAILABLE = 0;
+const AVAILABLE = 1;
+const COMPLETE = 2;
+const FINAL = 3;
+
+let dag;
+
 // Define graph classes
 class Node {
     constructor(address) {
         this.address = address;
 
         // we only populated the edges array once bc we assume it won't change
-        this.edges = [];
-        let numEdges = readMemory(this.address + 0xa0, memoryjs.UINT32); // retail: a0, proto: 94
-        let edgeArray = readMemory(this.address + 0xa4, memoryjs.UINT32); // retail: a4, proto: 98
-        for (let i = 0; i < numEdges; i++) {
-            this.edges.push(readMemory(edgeArray + i*4, memoryjs.UINT32));
-        }
+        this.edges = this.children;
     }
 
-    // get/set the current state of the task (0, 1, 2, 3)
+    // get the current state of the task (0, 1, 2, 3)
     get state() {
         return readMemory(this.address + 0x54, memoryjs.UINT32);
     }
+    s
+    
     set state(val) {
         writeMemory(this.address + 0x54, val, memoryjs.UINT32);
+    }
+
+    get children() {
+        let children = []
+        let numChildren = readMemory(this.address + 0xa0, memoryjs.UINT32);
+        let childrenArray = readMemory(this.address + 0xa4, memoryjs.UINT32); // retail: a4, proto: 98
+        for (let i = 0; i < numChildren; i++) {
+            children.push(readMemory(childrenArray + i*4, memoryjs.UINT32));
+        }
+        return children;
+    }
+
+    get parents() {
+        let parents = []
+        let numParents = readMemory(this.address + 0x94, memoryjs.UINT32);
+        let parentsArray = readMemory(this.address + 0x98, memoryjs.UINT32); // retail: a4, proto: 98
+        for (let i = 0; i < numParents; i++) {
+            parents.push(readMemory(parentsArray + i*4, memoryjs.UINT32));
+        }
+        return parents;
     }
 
     // get the job pointer for the task
@@ -64,6 +88,78 @@ class Node {
         let color = ['#8A0808', '#207F1D', '#0C687D', '#4E4E4E'][this.state];
         let shape = (this.checkpoint == 0xFFFFFFFF) ? 'oval' : 'diamond';
         return `[fillcolor="${fillcolor}" color="${color}" shape="${shape}"]`;
+    }
+    
+    // force the state of the task, maintaining the rules of the dag
+    forceState(target, visited=[], skipParents=false) {
+        //if (visited.length == 0) console.log("\nWarning: No visited array passed");
+        if (visited.indexOf(this.address) > -1) return; // if already checked, skip
+        visited.push(this.address); // now we're checking it, so add to visited array
+
+        //console.log(`${hex(this.address)}, ${target}`);
+        if (target < 0 || target > 3) return; // if attempting to set an invalid value, abort
+        if (target == this.state) return // this state is already target, abort
+        if (target == 2 && this.job == 0) target = 3; // override setting a node outside a job to 2
+
+        // iterate parents
+        for (let parent of this.parents) {
+            let p = new Node(parent);
+
+            if (target == UNAVAILABLE) {
+                // if target state is unavailable,
+                // parent should be unavailable
+                p.forceState(UNAVAILABLE, visited);
+            } else {
+                // if target state is available, complete, or final...
+                if (p.job == 0) {
+                    // if parent is not in a job, it should be final
+                    p.forceState(FINAL, visited);
+                } else if (p.job != this.job) {
+                    // if parent is in a job, and it's not the same as this nodes' job,
+                    // it must be the last node in a job so, it must be final.
+                    p.forceState(FINAL, visited);
+                } else {
+                    // if parent is in a job, and it is the same as this node's job...
+                    if (target == AVAILABLE) {
+                        // if target state is available, parent must be complete.
+                        p.forceState(COMPLETE, visited)
+                    } else {
+                        // if the target state is complete or final,
+                        // parent must be complete or final, but either way,
+                        // it should be the same a this node.
+                        p.forceState(target, visited);
+                    }
+                }
+            }
+        }
+
+        // actually update dag state
+        this.state = target;
+
+        // iterate children
+        for (let child of this.children) {
+            let c = new Node(child);
+
+            if (target in [UNAVAILABLE, AVAILABLE]) {
+                // if target state is unavailable or available,
+                // child must be unavailable
+                c.forceState(UNAVAILABLE, visited);
+            } else if (target == COMPLETE) {
+                // if target state is complete,
+                // child must be available
+                c.forceState(AVAILABLE, visited);
+            } else {
+                // if target state is final...
+                if (c.job == this.job) {
+                    // if child node is in same job as this node,
+                    // child must be final
+                    c.forceState(FINAL, visited);
+                } else {
+                    // otherwise, it must be available
+                    c.forceState(AVAILABLE, visited);
+                }
+            }
+        }
     }
 
     // generate the dot language text for the node
@@ -119,6 +215,16 @@ class Graph {
         for (const edge of node.edges) {
             if (!(this.edge in visited)) {
                 this.populateChildren(edge, visited);
+            }
+        }
+    }
+
+    // reset dag to clean state
+    reset() {
+        for (let cluster of Object.values(this.clusters)) {
+            for (let node of cluster.nodes) {
+                if (node.address == this.head) node.state = 1;
+                else node.state = 0;
             }
         }
     }
@@ -186,10 +292,19 @@ function hex(num) {
     return num.toString(16);
 }
 
-// Handle click event from interact.js
-ipc.on('increment-state', function(event,store) {
+// Handle event from renderer
+ipc.on('increment-state', function(event, store) {
     let node = new Node(parseInt(store, 16));
-    node.state = (node.state + 1) % 4;
+    node.forceState((node.state + 1) % 4);
+});
+
+ipc.on('force-state', function(event, store) {
+    let node = new Node(parseInt(store.node, 16));
+    node.forceState(store.state);
+});
+
+ipc.on('reset-dag', function() {
+    dag.reset();
 });
 
 // Create the browser window
@@ -232,7 +347,7 @@ app.whenReady().then(() => {
         let head = readMemory(0x3e0b04, memoryjs.UINT32); //retail
         //let head = readMemory(0x003EE52C, memoryjs.UINT32); //proto
         
-        let dag = new Graph(head);
+        dag = new Graph(head);
         //console.log(dag.dot());
 
         // sent dot text to window every 500ms

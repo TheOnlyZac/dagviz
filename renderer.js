@@ -2,6 +2,8 @@ var ipc = require('electron').ipcRenderer;
 var d3 = require('d3-graphviz');
 window.$ = window.jQuery = require('jquery');
 
+/* Manage graph */
+
 // Init graph attributes
 var margin = 2;
 var width = window.innerWidth - margin;
@@ -36,6 +38,10 @@ function render() {
         .renderDot(dot)
 }
 
+// Set up vars to store dot text for graph
+var lastDot = '';
+var dot = '';
+
 // Handle receiving dot text from main.js
 ipc.on('dot-text', function(event,store) {
     dot = store;
@@ -46,21 +52,49 @@ ipc.on('dot-text', function(event,store) {
     }
 });
 
-// Set up vars to store dot text for graph
-var lastDot = '';
-var dot = '';
+/* Manage GUI */
+
+// GUI elements
+let contextMenu;
+let mousePos = { x:0, y:0 };
 
 // Handle receiveing world ID from main.js
 ipc.on('world-id', function(event, store) {
-    document.getElementById('world-id').innerHTML = store;
+    $('#world-id').text(store);
 });
 
 // Wait for document ready
 window.addEventListener('DOMContentLoaded', () => {
-    // Handle clicking on nodes
-    $(document).on('click', '.node', function() {
-        let nodeId = $(this).find('title').text();
-        console.log(`node ${nodeId} clicked!`);
-        ipc.send('increment-state', nodeId);
+    $contextMenu = $('#context-menu')
+        .hide();
+
+    // Store current mouse position in mousePos
+    $(document).on('mousemove', function(e) {
+        mousePos.x = e.pageX;
+        mousePos.y = e.pageY;
+    })
+
+    // On click, hide context menu
+    $(document).on('click', function() {
+        $contextMenu.hide();
+    })
+
+    // On right-clicking a node, show context menu at mouse position
+    $(document).on('contextmenu', '.node', function() {
+        targetNode = $(this).find('title').text();
+        $contextMenu.css('left', mousePos.x);
+        $contextMenu.css('top', mousePos.y);
+        $contextMenu.show();
+    })
+
+    // On clicking update state button, send update-state to main.js
+    $(document).on('click', '.force-state', function() {
+        targetState = parseInt($(this).data('state'));
+        ipc.send('force-state', { node: targetNode, state: targetState });
+    })
+
+    // On clicking reset dag button, send reset-dag to main.js
+    $(document).on('click', '.reset-dag', function() {
+        ipc.send('reset-dag');
     })
 })
