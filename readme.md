@@ -8,9 +8,10 @@ A real-time save editor for Sly 2 and Sly 3.
 * View the state of each task in real-time
 * Right-click a task to edit its state
 * Nodes display their address in memory
+* Export the current DAG to a DOT language file
 
 ## Planned Features
-* Export the current DAG to a PNG or DOT language file
+* Export the current DAG to a PNG
 * Readable names based on task descriptions
 * Changes to DAG persist between reloads
 
