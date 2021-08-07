@@ -1,5 +1,6 @@
 var ipc = require('electron').ipcRenderer;
 var d3 = require('d3-graphviz');
+var save = require('save-svg-as-png');
 window.$ = window.jQuery = require('jquery');
 
 /* Manage graph */
@@ -105,5 +106,11 @@ window.addEventListener('DOMContentLoaded', () => {
     // On clicking reset dag button, send reset-dag to main.js
     $(document).on('click', '.export-dot', function() {
         ipc.send('export-dot');
+        window.alert('Saved graph to export.dot!');
+    })
+
+    // On clicking reset dag button, send reset-dag to main.js
+    $(document).on('click', '.export-png', function() {
+        save.saveSvgAsPng($('svg').get(0), 'export.png', {scale: 2})
     })
 })

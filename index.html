@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src 'self' data:">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src 'self' data:">
     
     <script src="node_modules\jquery\dist\jquery.min.js" type="text/javascript"></script>
 
@@ -22,7 +22,8 @@
             <hr/>
             <div class="context-btn reset-dag">Reset DAG</div>
             <hr/>
-            <div class="context-btn export-dot">Export DOT text</div>
+            <div class="context-btn export-dot">Export graph as DOT text</div>
+            <div class="context-btn export-png">Save current view as PNG</div>
         </div>
     </div>
 

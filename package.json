@@ -18,6 +18,7 @@
     "d3-graphviz": "^4.0.0",
     "electron": "^13.1.7",
     "jquery": "^3.6.0",
-    "memoryjs": "^3.4.0"
+    "memoryjs": "^3.4.0",
+    "save-svg-as-png": "^1.4.17"
   }
 }
