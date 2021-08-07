@@ -339,6 +339,10 @@ ipc.on('reset-dag', function() {
     dag.reset();
 });
 
+ipc.on('refresh-dag', function() {
+    dag.populateGraph();
+});
+
 ipc.on('export-dot', function() {
     let dot = dag.dot();
 

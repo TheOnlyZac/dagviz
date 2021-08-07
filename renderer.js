@@ -104,6 +104,11 @@ window.addEventListener('DOMContentLoaded', () => {
     })
 
     // On clicking reset dag button, send reset-dag to main.js
+    $(document).on('click', '.refresh-dag', function() {
+        ipc.send('refresh-dag');
+    })
+
+    // On clicking reset dag button, send reset-dag to main.js
     $(document).on('click', '.export-dot', function() {
         ipc.send('export-dot');
         window.alert('Saved graph to export.dot!');
