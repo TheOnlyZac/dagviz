@@ -63,6 +63,10 @@ ipc.on('world-id', function(event, store) {
     $('#world-id').text(store);
 });
 
+ipc.on('alert', function(event, storer) {
+    window.alert(store);
+})
+
 // Wait for document ready
 window.addEventListener('DOMContentLoaded', () => {
     $contextMenu = $('#context-menu')
@@ -96,5 +100,10 @@ window.addEventListener('DOMContentLoaded', () => {
     // On clicking reset dag button, send reset-dag to main.js
     $(document).on('click', '.reset-dag', function() {
         ipc.send('reset-dag');
+    })
+
+    // On clicking reset dag button, send reset-dag to main.js
+    $(document).on('click', '.export-dot', function() {
+        ipc.send('export-dot');
     })
 })

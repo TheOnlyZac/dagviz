@@ -4,7 +4,8 @@
 const { app, BrowserWindow, webContents } = require('electron');
 const ipc = require('electron').ipcMain;
 const path = require('path');
-const memoryjs = require("memoryjs");
+const memoryjs = require('memoryjs');
+const fs = require('fs');
 
 // Set up memoryjs
 const processName = 'pcsx2.exe';
@@ -253,7 +254,7 @@ class Graph {
         // init digraph with default styles for graph/node
         let dots = [
             'digraph {',
-            'graph [style="bold, rounded" bgcolor="#ffffff00" fontname="courier"]',
+            'graph [style="bold, rounded" bgcolor="#ffffffff" fontname="courier"]',
             'node [style="filled, bold, rounded" fontname="courier" fontcolor="black" shape="oval"]',
             'fillcolor="#ffffff00"'
         ];
@@ -335,6 +336,18 @@ ipc.on('reset-dag', function() {
     dag.reset();
 });
 
+ipc.on('export-dot', function() {
+    let dot = dag.dot();
+
+    fs.writeFile('export.dot', dot, err => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        // file written successfully
+      })
+})
+
 // Create the browser window
 function createWindow() {
     // Initialize new window
@@ -371,7 +384,6 @@ app.whenReady().then(() => {
     const win = createWindow();
 
     setGame();
-    console.log(GAME);
 
     // note: head node is pointed to by 0x003EE52C (proto), 0x826e80 (Sly 2), 0xsomething (Sly 3)
     let headAddr = [0x3EE52C, 0x3e0b04, 0x478c8c][GAME];
