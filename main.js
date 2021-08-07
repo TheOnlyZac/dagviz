@@ -26,7 +26,10 @@ const AVAILABLE = 1;
 const COMPLETE = 2;
 const FINAL = 3;
 
-// Game? Sly 2 = 1, Sly 3 = 2
+// Game ID:
+// 0 = Sly 2 Proto
+// 1 = Sly 2
+// 2 = Sly 3
 let GAME = 0;
 
 // Declare DAG
@@ -373,7 +376,7 @@ function createWindow() {
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 
     // Return the new BrowserWindow
     return win;
@@ -383,6 +386,7 @@ function createWindow() {
 app.whenReady().then(() => {
     const win = createWindow();
 
+    // Update and set game ID
     setGame();
 
     // note: head node is pointed to by 0x003EE52C (proto), 0x826e80 (Sly 2), 0xsomething (Sly 3)
