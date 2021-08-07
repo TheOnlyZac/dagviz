@@ -25,11 +25,23 @@ const AVAILABLE = 1;
 const COMPLETE = 2;
 const FINAL = 3;
 
+// Game? Sly 2 = 1, Sly 3 = 2
+let GAME = 0;
+
 // Declare DAG
 let dag;
 
 // Define graph classes
 class Node {
+
+    static oState = [0x0, 0x54, 0x44];
+    static oNumChildren = [0x0, 0xa0, 0x90];
+    static oChildrenArray = [0x0, 0xa4, 0x94];
+    static oNumParents = [0x0, 0x94, 0x84];
+    static oParentsArray = [0x0, 0x98, 0x88];
+    static oJob = [0x0, 0x7c, 0x6c];
+    static oCheckpoint = [0x0, 0xb8, 0xa8];
+
     constructor(address) {
         this.address = address;
 
@@ -39,18 +51,18 @@ class Node {
 
     // get the current state of the task (0, 1, 2, 3)
     get state() {
-        return readMemory(this.address + 0x54, memoryjs.UINT32);
+        return readMemory(this.address + Node.oState[GAME], memoryjs.UINT32);
     }
     s
     
     set state(val) {
-        writeMemory(this.address + 0x54, val, memoryjs.UINT32);
+        writeMemory(this.address + Node.oState[GAME], val, memoryjs.UINT32);
     }
 
     get children() {
         let children = []
-        let numChildren = readMemory(this.address + 0xa0, memoryjs.UINT32);
-        let childrenArray = readMemory(this.address + 0xa4, memoryjs.UINT32); // retail: a4, proto: 98
+        let numChildren = readMemory(this.address + Node.oNumChildren[GAME], memoryjs.UINT32);
+        let childrenArray = readMemory(this.address + Node.oChildrenArray[GAME], memoryjs.UINT32); // retail: a4, proto: 98
         for (let i = 0; i < numChildren; i++) {
             children.push(readMemory(childrenArray + i*4, memoryjs.UINT32));
         }
@@ -59,8 +71,8 @@ class Node {
 
     get parents() {
         let parents = []
-        let numParents = readMemory(this.address + 0x94, memoryjs.UINT32);
-        let parentsArray = readMemory(this.address + 0x98, memoryjs.UINT32); // retail: a4, proto: 98
+        let numParents = readMemory(this.address + Node.oNumParents[GAME], memoryjs.UINT32);
+        let parentsArray = readMemory(this.address + Node.oParentsArray[GAME], memoryjs.UINT32); // retail: a4, proto: 98
         for (let i = 0; i < numParents; i++) {
             parents.push(readMemory(parentsArray + i*4, memoryjs.UINT32));
         }
@@ -69,13 +81,13 @@ class Node {
 
     // get the job pointer for the task
     get job() {
-        return readMemory(this.address + 0x7c, memoryjs.UINT32); //retail
+        return readMemory(this.address + Node.oJob[GAME], memoryjs.UINT32); //retail
         //return readMemory(this.address + 0x74, memoryjs.UINT32); //proto
     }
 
     // get the checkpoint for this node
     get checkpoint() {
-        return readMemory(this.address + 0xb8, memoryjs.UINT32);
+        return readMemory(this.address + Node.oCheckpoint[GAME], memoryjs.UINT32);
     }
 
     // generate the style string for the dot node
@@ -299,6 +311,15 @@ function hex(num) {
     return num.toString(16);
 }
 
+function setGame() {
+    // detect which game is running and set GAME
+    let sly2 = readMemory(0x15b90, memoryjs.STRING);
+    let sly3 = readMemory(0x15390, memoryjs.STRING);
+    if (sly2.indexOf('SCUS_973.16') > -1) GAME = 1;
+    else if (sly3.indexOf('SCUS_974.64') > -1) GAME = 2;
+    else process.exit(1);
+}
+
 // Handle event from renderer
 ipc.on('increment-state', function(event, store) {
     let node = new Node(parseInt(store, 16));
@@ -349,40 +370,43 @@ function createWindow() {
 app.whenReady().then(() => {
     const win = createWindow();
 
-    try {
-        // note: head node is pointed to by 0x826e80
-        let head = readMemory(0x3e0b04, memoryjs.UINT32); //retail
-        //let head = readMemory(0x003EE52C, memoryjs.UINT32); //proto
-        
-        dag = new Graph(head);
+    setGame();
+    console.log(GAME);
 
-        // sent dot text to window every 500ms
-        setInterval(() => {
-            let worldId = readMemory(0x3D4A60, memoryjs.UINT32);
+    // note: head node is pointed to by 0x003EE52C (proto), 0x826e80 (Sly 2), 0xsomething (Sly 3)
+    let headAddr = [0x3EE52C, 0x3e0b04, 0x478c8c][GAME];
+    let head = readMemory(headAddr, memoryjs.UINT32);
+    
+    dag = new Graph(head);
 
-            let currHead;
-            if (worldId == 3) currHead = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set head for w3
-            else currHead = readMemory(0x3e0b04, memoryjs.UINT32); //retail
-            //let currHead = readMemory(0x003EE52C, memoryjs.UINT32); //proto
+    // sent dot text to window every 500ms
+    setInterval(() => {
+        setGame();
 
-            // make sure dag isn't null before doing anything
-            if (currHead != 0x000000) {
-                // if the dag head is wrong, wait until 1 sec after level load to repopulate
-                let isLoading = (readMemory(0x003D4830, memoryjs.UINT32) == 0x1) ? true : false;
-                if ((currHead != dag.head) && !(isLoading)) {
-                    setTimeout(() => {
-                        dag.head = currHead;
-                        dag.populateGraph();
-                    }, 1000);
-                }
-                
-                // send the dot text to the window
-                win.webContents.send('dot-text', dag.dot());
-                win.webContents.send('world-id', worldId);
+        let worldAddr = [0x0, 0x3D4A60, 0x468D30][GAME]
+        let worldId = readMemory(worldAddr, memoryjs.UINT32);
+
+        let currHead;
+        if (GAME == 2 && worldId == 3) currHead = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set head for Sly 2 ep3
+        else currHead = readMemory(headAddr, memoryjs.UINT32);
+
+        // make sure dag isn't null before doing anything
+        if (currHead != 0x000000) {
+            // if the dag head is wrong, wait until 1 sec after level load to repopulate
+            let isLoading = false;
+            if (GAME == 1 && (readMemory(0x3D4830, memoryjs.UINT32) == 0x1)) isLoading = true;
+            else if (GAME == 2 && (readMemory(0x467B00, memoryjs.UINT32) == 0x1)) isLoading = true;
+
+            if ((currHead != dag.head) && !(isLoading)) {
+                setTimeout(() => {
+                    dag.head = currHead;
+                    dag.populateGraph();
+                }, 1000);
             }
-        }, 500);
-    } catch (err) {
-        console.log(`An error occurred. Please contact TheOnlyZac#0269 on Discord.\nError details:\n${err}`);
-        process.exit(1);
-    }
+            
+            // send the dot text to the window
+            win.webContents.send('dot-text', dag.dot());
+            win.webContents.send('world-id', worldId);
+        }
+    }, 500);
 })
