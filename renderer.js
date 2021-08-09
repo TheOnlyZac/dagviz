@@ -87,9 +87,16 @@ window.addEventListener('DOMContentLoaded', () => {
     // On right-clicking a node, show context menu at mouse position
     $(document).on('contextmenu', '.node', function() {
         targetNode = $(this).find('title').text();
+        $('.copy-address').text('Copy address 0x' + targetNode);
+        $('.copy-address').attr('address', targetNode);
         $contextMenu.css('left', mousePos.x);
         $contextMenu.css('top', mousePos.y);
         $contextMenu.show();
+    })
+
+    $(document).on('click', '.copy-address', function(e) {
+        e.preventDefault();
+        navigator.clipboard.writeText($(this).attr('address'));
     })
 
     // On clicking update state button, send update-state to main.js

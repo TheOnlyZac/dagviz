@@ -386,7 +386,7 @@ function createWindow() {
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
     // Return the new BrowserWindow
     return win;
