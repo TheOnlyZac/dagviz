@@ -15,7 +15,7 @@ let processObject;
 try {
     processObject = memoryjs.openProcess(processName);
 } catch(err) {
-    console.log("PCSX2 not detected. Please make sure PCSX2 is open and Sly 2 NTSC is running.");
+    console.log("PCSX2 not detected. Please make sure PCSX2 is open and Sly 2 or 3 (NTSC) is running.");
     process.exit(1);
 }
 const memoryBase = 0x20000000
@@ -37,7 +37,7 @@ let dag;
 
 // Define graph classes
 class Node {
-
+    
     static oState = [0x0, 0x54, 0x44];
     static oNumChildren = [0x0, 0xa0, 0x90];
     static oChildrenArray = [0x0, 0xa4, 0x94];
@@ -406,8 +406,13 @@ app.whenReady().then(() => {
         let worldAddr = [0x0, 0x3D4A60, 0x468D30][GAME]
         let worldId = readMemory(worldAddr, memoryjs.UINT32);
 
+        if (GAME == 2) {
+            if (worldId == 2) worldId = 'N/A';
+            else if (worldId > 2) worldId -= 2;
+        }        
+
         let currHead;
-        if (GAME == 2 && worldId == 3) currHead = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set head for Sly 2 ep3
+        if (GAME == 1 && worldId == 3) currHead = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set head for Sly 2 ep3
         else currHead = readMemory(headAddr, memoryjs.UINT32);
 
         // make sure dag isn't null before doing anything

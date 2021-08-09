@@ -103,18 +103,18 @@ window.addEventListener('DOMContentLoaded', () => {
         ipc.send('reset-dag');
     })
 
-    // On clicking reset dag button, send reset-dag to main.js
+    // On clicking refresh dag button, send refresh-dag to main.js
     $(document).on('click', '.refresh-dag', function() {
         ipc.send('refresh-dag');
     })
 
-    // On clicking reset dag button, send reset-dag to main.js
+    // On clicking export dot button, send export-dot to main.js
     $(document).on('click', '.export-dot', function() {
         ipc.send('export-dot');
-        window.alert('Saved graph to export.dot!');
+        window.alert('Saved graph to export.dot');
     })
 
-    // On clicking reset dag button, send reset-dag to main.js
+    // On clicking export png button, save current view to image
     $(document).on('click', '.export-png', function() {
         save.saveSvgAsPng($('svg').get(0), 'export.png', {scale: 2})
     })
