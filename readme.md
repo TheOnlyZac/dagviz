@@ -28,7 +28,7 @@ Each node corresponds to a task, and tasks are color coded by their state:
 * Blue is Complete (2)
 * Gray is Final (3)
 
-Each node displays it's address in memory. Nodes also have descriptive names in the game's code, but as of now there is no method to automatically associate a node with its name.
+Each node displays it's unique ID. Right click a node to view/copy its memory address. Nodes also have descriptive names in the game's code, but as of now there is no method to automatically associate a node with its name.
 
 Diamond-shaped tasks have checkpoints. When you die, you respawn at the last targeted checkpoint.
 

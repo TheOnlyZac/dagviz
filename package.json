@@ -1,7 +1,7 @@
 {
   "name": "dagedit",
   "version": "0.4.0",
-  "description": "",
+  "description": "A real-time save editor for Sly 2 and Sly 3",
   "main": "main.js",
   "scripts": {
     "test": "electromon .",
