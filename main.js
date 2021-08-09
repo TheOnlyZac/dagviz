@@ -37,7 +37,8 @@ let dag;
 
 // Define graph classes
 class Node {
-    
+
+    static oId = [0x0, 0x18, 0x18];
     static oState = [0x0, 0x54, 0x44];
     static oNumChildren = [0x0, 0xa0, 0x90];
     static oChildrenArray = [0x0, 0xa4, 0x94];
@@ -51,6 +52,10 @@ class Node {
 
         // we only populate the edges array once bc we assume it won't change
         this.edges = this.children;
+    }
+
+    get id() {
+        return readMemory(this.address + Node.oId[GAME], memoryjs.UINT32);
     }
 
     // get the current state of the task (0, 1, 2, 3)
@@ -102,10 +107,11 @@ class Node {
             2: blue
             3: gray
         */
+        let label = this.id;
         let fillcolor = ['#F77272', '#9EE89B', '#61D6F0', '#C2C2C2'][this.state];
         let color = ['#8A0808', '#207F1D', '#0C687D', '#4E4E4E'][this.state];
         let shape = (this.checkpoint == 0xFFFFFFFF) ? 'oval' : 'diamond';
-        return `[fillcolor="${fillcolor}" color="${color}" shape="${shape}"]`;
+        return `[label="${label}" fillcolor="${fillcolor}" color="${color}" shape="${shape}"]`;
     }
     
     // force the state of the task, maintaining the rules of the dag
