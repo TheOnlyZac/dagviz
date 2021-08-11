@@ -32,7 +32,7 @@ window.onresize = function() {
 
 // Render dot graph
 function render() {
-    document.body.style.cursor = 'wait';
+    lastDot = dot;
     graphviz
         .width(width)
         .height(height)
@@ -48,10 +48,18 @@ ipc.on('dot-text', function(event,store) {
     dot = store;
     // re-render graph only if received dot text is different
     if (dot != lastDot) {
-        lastDot = dot;
         render();
     }
 });
+
+ipc.on('no-game', function(event, store) {
+    dot = '';
+    $('#episode-title').text(store);
+    // re-render graph only if received dot text is different
+    if (dot != lastDot) {
+        render();
+    }
+})
 
 /* Manage GUI */
 
@@ -61,10 +69,10 @@ let mousePos = { x:0, y:0 };
 
 // Handle receiveing world ID from main.js
 ipc.on('world-id', function(event, store) {
-    $('#world-id').text(store);
+    $('#episode-title').text('Episode ' + store);
 });
 
-ipc.on('alert', function(event, storer) {
+ipc.on('alert', function(event, store) {
     window.alert(store);
 })
 
