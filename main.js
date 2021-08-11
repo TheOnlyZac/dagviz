@@ -26,11 +26,17 @@ const AVAILABLE = 1;
 const COMPLETE = 2;
 const FINAL = 3;
 
-// Game ID:
-// 0 = Sly 2 Proto
-// 1 = Sly 2
-// 2 = Sly 3
-let GAME = 0;
+// Game/Build ID
+let BUILD = -1;
+let GAME = -1;
+
+const BUILDS = Object.freeze({
+    sly2: 0,
+    sly3: 1,
+    sly2mar: 3,
+    sly3aug: 4,
+    sly3sep: 5
+});
 
 // Declare DAG and tasks dict
 let dag;
@@ -39,14 +45,14 @@ let tasks = {};
 // Define graph classes
 class Node {
 
-    static oId = [0x0, 0x18, 0x18];
-    static oState = [0x0, 0x54, 0x44];
-    static oNumChildren = [0x0, 0xa0, 0x90];
-    static oChildrenArray = [0x0, 0xa4, 0x94];
-    static oNumParents = [0x0, 0x94, 0x84];
-    static oParentsArray = [0x0, 0x98, 0x88];
-    static oJob = [0x0, 0x7c, 0x6c];
-    static oCheckpoint = [0x0, 0xb8, 0xa8];
+    static oId = [0x18, 0x18];
+    static oState = [0x54, 0x44];
+    static oNumChildren = [0xa0, 0x90];
+    static oChildrenArray = [0xa4, 0x94];
+    static oNumParents = [0x94, 0x84];
+    static oParentsArray = [0x98, 0x88];
+    static oJob = [0x7c, 0x6c];
+    static oCheckpoint = [0xb8, 0xa8];
 
     constructor(address) {
         this.address = address;
@@ -56,31 +62,23 @@ class Node {
     }
 
     get id() {
-        return readMemory(this.address + Node.oId[GAME], memoryjs.UINT32);
-    }
-
-    get name() {
-        if ((GAME in tasks) && (this.id in tasks[GAME])) {
-            return tasks[GAME][this.id].name;
-        } else {
-            return this.id;
-        }
+        return readMemory(this.address + Node.oId[BUILD], memoryjs.UINT32);
     }
 
     // get the current state of the task (0, 1, 2, 3)
     get state() {
-        return readMemory(this.address + Node.oState[GAME], memoryjs.UINT32);
+        return readMemory(this.address + Node.oState[BUILD], memoryjs.UINT32);
     }
     s
     
     set state(val) {
-        writeMemory(this.address + Node.oState[GAME], val, memoryjs.UINT32);
+        writeMemory(this.address + Node.oState[BUILD], val, memoryjs.UINT32);
     }
 
     get children() {
         let children = []
-        let numChildren = readMemory(this.address + Node.oNumChildren[GAME], memoryjs.UINT32);
-        let childrenArray = readMemory(this.address + Node.oChildrenArray[GAME], memoryjs.UINT32); // retail: a4, proto: 98
+        let numChildren = readMemory(this.address + Node.oNumChildren[BUILD], memoryjs.UINT32);
+        let childrenArray = readMemory(this.address + Node.oChildrenArray[BUILD], memoryjs.UINT32); // retail: a4, proto: 98
         for (let i = 0; i < numChildren; i++) {
             children.push(readMemory(childrenArray + i*4, memoryjs.UINT32));
         }
@@ -89,8 +87,8 @@ class Node {
 
     get parents() {
         let parents = []
-        let numParents = readMemory(this.address + Node.oNumParents[GAME], memoryjs.UINT32);
-        let parentsArray = readMemory(this.address + Node.oParentsArray[GAME], memoryjs.UINT32); // retail: a4, proto: 98
+        let numParents = readMemory(this.address + Node.oNumParents[BUILD], memoryjs.UINT32);
+        let parentsArray = readMemory(this.address + Node.oParentsArray[BUILD], memoryjs.UINT32); // retail: a4, proto: 98
         for (let i = 0; i < numParents; i++) {
             parents.push(readMemory(parentsArray + i*4, memoryjs.UINT32));
         }
@@ -99,13 +97,22 @@ class Node {
 
     // get the job pointer for the task
     get job() {
-        return readMemory(this.address + Node.oJob[GAME], memoryjs.UINT32); //retail
+        return readMemory(this.address + Node.oJob[BUILD], memoryjs.UINT32); //retail
         //return readMemory(this.address + 0x74, memoryjs.UINT32); //proto
     }
 
     // get the checkpoint for this node
     get checkpoint() {
-        return readMemory(this.address + Node.oCheckpoint[GAME], memoryjs.UINT32);
+        return readMemory(this.address + Node.oCheckpoint[BUILD], memoryjs.UINT32);
+    }
+    
+    // get the tasks's name based on its ID
+    get name() {
+        if ((BUILD == BUILDS.sly2) && (this.id in tasks[BUILDS.sly2.retail])) {
+            return 'tasks[BUILDS.sly2.retail][this.id].name}';
+        } else {
+            return this.id;
+        }
     }
 
     // generate the style string for the dot node
@@ -332,12 +339,24 @@ function hex(num) {
 }
 
 function setGame() {
-    // detect which game is running and set GAME
-    let sly2 = readMemory(0x15b90, memoryjs.STRING);
-    let sly3 = readMemory(0x15390, memoryjs.STRING);
-    if (sly2.indexOf('SCUS_973.16') > -1) GAME = 1;
-    else if (sly3.indexOf('SCUS_974.64') > -1) GAME = 2;
-    else process.exit(1);
+    // detect which game is running and set BUILD
+    let sly2Pid = readMemory(0x15b90, memoryjs.STRING);
+    let sly3Pid = readMemory(0x15390, memoryjs.STRING);
+
+    if (sly2Pid.indexOf('SCUS_973.16') > -1) { // Sly 2 Retail
+        GAME = 2;
+        BUILD = BUILDS.sly2;
+    } else if (sly2Pid.indexOf('SCUS_971.98') > -1) { // Sly 2 March Proto
+        GAME = 2;
+        BUILD = BIULDS.sly2mar;
+    }
+    else if (sly3Pid.indexOf('SCUS_974.64') > -1) { // Sly 3 Retail
+        GAME = 3;
+        BUILD = BUILDS.sly3;
+    }
+    else { // Invalid/Unsupported build
+        BUILD = -1;
+    }
 }
 
 // Handle event from renderer
@@ -406,41 +425,49 @@ function createWindow() {
 // Called after Electron finishes initialization
 app.whenReady().then(() => {
     const win = createWindow();
-
-    // Update and set game ID
-    setGame();
     
+    // Load task names/descriptions from JSON file
     let rawdata = fs.readFileSync('tasks-sly2.json');
-    tasks[1] = JSON.parse(rawdata);
+    tasks[BUILDS.sly2.retail] = JSON.parse(rawdata);
 
-    // note: head node is pointed to by 0x003EE52C (proto), 0x826e80 (Sly 2), 0xsomething (Sly 3)
-    let headAddr = [0x3EE52C, 0x3e0b04, 0x478c8c][GAME];
+    // Set BUILD id
+    setGame();
+
+    console.log(BUILD);
+    console.log(Object.keys(tasks));
+    console.log(GAME == 2);
+    console.log(BUILD == BUILDS.sly2);
+
+    // Set DAG head node
+    let headAddr = [0x3e0b04, 0x478c8c, 0x3EE52C][BUILD];
     let head = readMemory(headAddr, memoryjs.UINT32);
     
     dag = new Graph(head);
 
-    // sent dot text to window every 500ms
+    // Send dot text to window every 500ms
     setInterval(() => {
         setGame();
 
-        let worldAddr = [0x0, 0x3D4A60, 0x468D30][GAME]
+        let worldAddr = [0x3D4A60, 0x468D30][BUILD]
         let worldId = readMemory(worldAddr, memoryjs.UINT32);
 
-        if (GAME == 2) {
-            if (worldId == 2) worldId = 'N/A';
-            else if (worldId > 2) worldId -= 2;
+        // Convert Sly 3 world IDs to episode IDs
+        if (BUILD == BUILDS.sly3) {
+            if (worldId == 2) worldId = 'N/A'; // handle Sly 3 Hazard Room
+            else if (worldId == 1) worldId = 0; // handle Sly 3 prologue
+            else worldId -= 2; // handle all other Sly 3 worlds
         }        
 
         let currHead;
-        if (GAME == 1 && worldId == 3) currHead = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set head for Sly 2 ep3
+        if (BUILD == BUILDS.sly2 && worldId == 3) currHead = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set head for Sly 2 ep3
         else currHead = readMemory(headAddr, memoryjs.UINT32);
 
         // make sure dag isn't null before doing anything
         if (currHead != 0x000000) {
             // if the dag head is wrong, wait until 1 sec after level load to repopulate
             let isLoading = false;
-            if (GAME == 1 && (readMemory(0x3D4830, memoryjs.UINT32) == 0x1)) isLoading = true;
-            else if (GAME == 2 && (readMemory(0x467B00, memoryjs.UINT32) == 0x1)) isLoading = true;
+            if (BUILD == BUILDS.sly2 && (readMemory(0x3D4830, memoryjs.UINT32) == 0x1)) isLoading = true;
+            else if (BUILD == BUILDS.sly3 && (readMemory(0x467B00, memoryjs.UINT32) == 0x1)) isLoading = true;
 
             if ((currHead != dag.head) && !(isLoading)) {
                 setTimeout(() => {
