@@ -32,8 +32,9 @@ const FINAL = 3;
 // 2 = Sly 3
 let GAME = 0;
 
-// Declare DAG
+// Declare DAG and tasks dict
 let dag;
+let tasks = {};
 
 // Define graph classes
 class Node {
@@ -56,6 +57,14 @@ class Node {
 
     get id() {
         return readMemory(this.address + Node.oId[GAME], memoryjs.UINT32);
+    }
+
+    get name() {
+        if ((GAME in tasks) && (this.id in tasks[GAME])) {
+            return tasks[GAME][this.id].name;
+        } else {
+            return this.id;
+        }
     }
 
     // get the current state of the task (0, 1, 2, 3)
@@ -107,11 +116,11 @@ class Node {
             2: blue
             3: gray
         */
-        let label = this.id;
+        let label = this.name;
         let fillcolor = ['#F77272', '#9EE89B', '#61D6F0', '#C2C2C2'][this.state];
         let color = ['#8A0808', '#207F1D', '#0C687D', '#4E4E4E'][this.state];
         let shape = (this.checkpoint == 0xFFFFFFFF) ? 'oval' : 'diamond';
-        return `[label="${label}" fillcolor="${fillcolor}" color="${color}" shape="${shape}"]`;
+        return `[label="${label}" fillcolor="${fillcolor}" color="${color}" shape="${shape}" width=2 height=0.75]`;
     }
     
     // force the state of the task, maintaining the rules of the dag
@@ -213,6 +222,7 @@ class Graph {
         this.head = head;
         this.clusters = {};
         this.edgeText = '';
+        
         this.populateGraph();
     }
 
@@ -386,7 +396,8 @@ function createWindow() {
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
+    //console.log("DO NOT FORGOT TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
 
     // Return the new BrowserWindow
     return win;
@@ -398,6 +409,9 @@ app.whenReady().then(() => {
 
     // Update and set game ID
     setGame();
+    
+    let rawdata = fs.readFileSync('tasks-sly2.json');
+    tasks[1] = JSON.parse(rawdata);
 
     // note: head node is pointed to by 0x003EE52C (proto), 0x826e80 (Sly 2), 0xsomething (Sly 3)
     let headAddr = [0x3EE52C, 0x3e0b04, 0x478c8c][GAME];
