@@ -7,10 +7,7 @@ const path = require('path');
 const memoryjs = require('memoryjs');
 const fs = require('fs');
 
-// Set up memoryjs
-const processName = 'pcsx2.exe';
-
-// Try to open pcsx2 process
+// Set up memoryjs vars
 let processObject;
 const memoryBase = 0x20000000
 
@@ -220,17 +217,18 @@ class Node {
 
 class Graph {
     constructor() {
-        this.head = null;
+        this.head;
         this.clusters = {};
         this.edgeText = '';
     }
 
-    populateGraph() {
+    populateGraph(head) {
+        this.head = head;
         this.clusters = {};
         this.edgeText = '';
 
         var visited  = []
-        this.populateChildren(this.head, visited)
+        this.populateChildren(head, visited)
     }
 
     // recursively populate the dag with a node and it's children
@@ -261,7 +259,7 @@ class Graph {
     reset() {
         for (let cluster of Object.values(this.clusters)) {
             for (let node of cluster.nodes) {
-                if (node.address == this.head) node.state = 1;
+                if (node.numParents == 0) node.state = 1;
                 else node.state = 0;
             }
         }
@@ -330,10 +328,21 @@ function hex(num) {
     return num.toString(16);
 }
 
-function setGame() {
+function reattach() {
+    try {
+        processObject = memoryjs.openProcess('pcsx2.exe');
+        console.log("Connected to PCSX2");
+    } catch(err) {
+        console.log("PCSX2 not detected. Make sure PCSX2 is open.");
+        processObject = undefined;
+        return;
+    }
+}
+
+function detectGame() {
     if (readMemory(0x92CE0, memoryjs.UINT32) != 1) {
-        GAME = -1;
-        BUILD = -1;
+        console.log("No game detected. Make sure the game is running.");
+        GAME = BUILD = -1;
         return;
     }
 
@@ -353,17 +362,12 @@ function setGame() {
         BUILD = BUILDS.sly3;
     }
     else { // Invalid/Unsupported build
-        GAME = -1;
-        BUILD = -1;
+        console.log("Invalid game detected. Make sure Sly 2 or 3 (NTSC) is running.");
+        GAME = BUILD = -1;
     }
 }
 
-// Handle event from renderer
-ipc.on('increment-state', function(event, store) {
-    let node = new Node(parseInt(store, 16));
-    node.forceState((node.state + 1) % 4);
-});
-
+// Handle events from renderer.js
 ipc.on('force-state', function(event, store) {
     let node = new Node(parseInt(store.node, 16));
     node.forceState(store.state);
@@ -385,7 +389,7 @@ ipc.on('export-dot', function() {
           console.error(err)
           return
         }
-        // file written successfully
+        console.log("Exported DAG to export.dot");
       })
 })
 
@@ -435,52 +439,44 @@ app.whenReady().then(() => {
     // Try to update graph and send dot text to window every 500ms
     setInterval(() => {
         // Handle PCSX2 not open
+        reattach();
         if (processObject == undefined) {
-            try {
-                processObject = memoryjs.openProcess(processName);
-            } catch(err) {
-                console.log("PCSX2 not detected. Make sure PCSX2 is open.");
-                win.webContents.send('no-game', 'PCSX2 not detected.');
-            }
+            win.webContents.send('no-game', 'PCSX2 not detected.');
         } else {
-            // Get game and build ID from memory
-            setGame();
-
             // Handle game not running
-            if (BUILD == -1 || GAME == -1) {
-                console.log("Game not detected. Make sure Sly 2 or 3 (NTSC) is running.");
+            detectGame();
+            if (GAME == -1 || BUILD == -1) {
                 win.webContents.send('no-game', 'Game not detected.');
             } else {
                 // Set DAG head node
                 var headAddr = [0x3e0b04, 0x478c8c, 0x3EE52C][BUILD];
-                var head = readMemory(headAddr, memoryjs.UINT32);
 
                 // Read World ID from memory
                 var worldAddr = [0x3D4A60, 0x468D30][BUILD]
                 var worldId = readMemory(worldAddr, memoryjs.UINT32);
-    
+
                 // Convert Sly 3 world IDs to episode IDs
                 if (BUILD == BUILDS.sly3) {
                     if (worldId == 2) worldId = 'N/A'; // handle Sly 3 Hazard Room
                     else if (worldId == 1) worldId = 0; // handle Sly 3 prologue
                     else worldId -= 2; // handle all other Sly 3 worlds
                 }        
-    
-                if (BUILD == BUILDS.sly2 && worldId == 3) currHead = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set head for Sly 2 ep3
-                else var currHead = readMemory(headAddr, memoryjs.UINT32);
-    
+
+                if (BUILD == BUILDS.sly2 && worldId == 3) rootNode = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set head for Sly 2 ep3
+                else var rootNode = readMemory(headAddr, memoryjs.UINT32);
+
                 // Update DAG if it's out of date
-                if (currHead != 0x000000 || dag.head == null) {
-                    // if the dag head is wrong, wait until 1 sec after level load to repopulate
+                if (rootNode != 0x000000) {
+                    // check if the game is loading
                     let isLoading = false;
                     if (BUILD == BUILDS.sly2 && (readMemory(0x3D4830, memoryjs.UINT32) == 0x1)) isLoading = true;
-                    else if (BUILD == BUILDS.sly3 && (readMemory(0x467B00, memoryjs.UINT32) == 0x1)) isLoading = true;
-    
-                    if ((currHead != dag.head) && !(isLoading)) {
+                    else if (BUILD == BUILDS.sly3 && (readMemory(0x467B00, memoryjs.UINT32) == 0x1)) isLoading = true
+
+                    // if the dag head is out of date, wait until 1 sec after level load to repopulate
+                    if ((rootNode != dag.head) && !(isLoading)) {
                         setTimeout(() => {
-                            dag.head = currHead;
-                            dag.populateGraph();
-                        }, 1000);
+                            dag.populateGraph(rootNode);
+                        }, 400);
                     }
                     
                     // send the dot text to the window
