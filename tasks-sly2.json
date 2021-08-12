@@ -1,726 +1,907 @@
 {
 	"1584": {
 		"name": "t1_follow_intro",
-		"desc": "Job trigger for \"Follow Dimitri\""
+		"desc": "Job trigger for \"Follow Dimitri\"",
+		"type": "Job Start"
 	},
 	"1585": {
 		"name": "t1_brawl_intro",
-		"desc": "Job trigger for \"Silence the Alarms\""
+		"desc": "Job trigger for \"Silence the Alarms\"",
+		"type": "Job Start"
 	},
 	"1586": {
 		"name": "t1_disco_ext_intro",
-		"desc": "Job Trigger for \"Disco Demolitions\""
+		"desc": "Job Trigger for \"Disco Demolitions\"",
+		"type": "Job Start"
 	},
 	"1587": {
 		"name": "t1_moulin_intro_exterior",
-		"desc": "Job trigger for \"Theater Pickpocketing\""
+		"desc": "Job trigger for \"Theater Pickpocketing\"",
+		"type": "Job Start"
 	},
 	"1752": {
 		"name": "t1_intro",
-		"desc": "\"The Black Chateau\" episode intro cinematic"
+		"desc": "\"The Black Chateau\" episode intro cinematic",
+		"type": "Task"
 	},
 	"1754": {
 		"name": "t1_roof_intro",
-		"desc": "Climb onto the roof of the safehouse"
+		"desc": "Climb onto the roof of the safehouse",
+		"type": "Task"
 	},
 	"1756": {
 		"name": "t1_l3_reminder",
-		"desc": "Bentley says \"You can use your binocucom...\""
+		"desc": "Bentley says \"You can use your binocucom...\"",
+		"type": "Helper"
 	},
 	"1757": {
 		"name": "t1_abandon_reminder",
-		"desc": "Bentley says \"Heads up, if you leave this area...\""
+		"desc": "Bentley says \"Heads up, if you leave this area...\"",
+		"type": "Helper"
 	},
 	"1761": {
 		"name": "t1_sat_intro",
-		"desc": "Job trigger for \"Satellite Sabotage\""
+		"desc": "Job trigger for \"Satellite Sabotage\"",
+		"type": "Job Start"
 	},
 	"1762": {
 		"name": "t1_sat_dish1",
-		"desc": "Activate the first satellite"
+		"desc": "Activate the first satellite",
+		"type": "Task"
 	},
 	"1764": {
 		"name": "t1_sat_dish2",
-		"desc": "Activate the second satellite"
+		"desc": "Activate the second satellite",
+		"type": "Task"
 	},
 	"1766": {
 		"name": "t1_sat_dish3",
-		"desc": "Activate the third satellite"
+		"desc": "Activate the third satellite",
+		"type": "Task"
 	},
 	"1769": {
 		"name": "t1_sat_complete",
-		"desc": "Complete \"Satellite Sabotage\""
+		"desc": "Complete \"Satellite Sabotage\"",
+		"type": "Job Complete"
 	},
 	"1772": {
 		"name": "t1_recon_intro",
-		"desc": "Job trigger for \"Breaking and Entering\""
+		"desc": "Job trigger for \"Breaking and Entering\"",
+		"type": "Job Start"
 	},
 	"1773": {
 		"name": "t1_recon_inside_intro",
-		"desc": "Rendezvous with Murray in the wine cellar"
+		"desc": "Rendezvous with Murray in the wine cellar",
+		"type": "Task"
 	},
 	"1776": {
 		"name": "t1_recon_brawl",
-		"desc": "Defeat the gang of rats with Murray"
+		"desc": "Defeat the gang of rats with Murray",
+		"type": "Task"
 	},
 	"1778": {
 		"name": "t1_recon_lift",
-		"desc": "Lift the lever so Sly can jump over the gate"
+		"desc": "Lift the lever so Sly can jump over the gate",
+		"type": "Task"
 	},
 	"1780": {
 		"name": "t1_recon_checkpoint1",
-		"desc": "Lasers checkpoint"
+		"desc": "Lasers checkpoint",
+		"type": "Task"
 	},
 	"1781": {
 		"name": "t1_recon_teach_crawltable",
-		"desc": "Learn how to crawl under tables"
+		"desc": "Learn how to crawl under tables",
+		"type": "Task"
 	},
 	"1782": {
 		"name": "t1_recon_teach_smartguard",
-		"desc": "Crawl under the tables to avoid the smartguards"
+		"desc": "Crawl under the tables to avoid the smartguards",
+		"type": "Task"
 	},
 	"1783": {
 		"name": "t1_recon_teach_crawlvent",
-		"desc": "Learn how to crawl into the vent"
+		"desc": "Learn how to crawl into the vent",
+		"type": "Task"
 	},
 	"1784": {
 		"name": "t1_recon_teach_juggle_1",
-		"desc": "Bentley gives Triangle + Circle Tutorial"
+		"desc": "Bentley gives Triangle + Circle Tutorial",
+		"type": "Task"
 	},
 	"1785": {
 		"name": "t1_recon_teach_juggle_2",
-		"desc": "Bentley says \"That sneak attack only works...\""
+		"desc": "Bentley says \"That sneak attack only works...\"",
+		"type": "Task"
 	},
 	"1786": {
 		"name": "t1_recon_checkpoint2.",
-		"desc": "Second checkpoint"
+		"desc": "Second checkpoint",
+		"type": "Task"
 	},
 	"1787": {
 		"name": "t1_recon_teach_swarmer_battle",
-		"desc": "Bentley says \"Don't get in a fight with rats\""
+		"desc": "Bentley says \"Don't get in a fight with rats\"",
+		"type": "Task"
 	},
 	"1788": {
 		"name": "t1_recon_teach_vent2",
-		"desc": "Find the second air vent"
+		"desc": "Find the second air vent",
+		"type": "Task"
 	},
 	"1789": {
 		"name": "t1_recon_vent2_broken",
-		"desc": "Break the second vent"
+		"desc": "Break the second vent",
+		"type": "Task"
 	},
 	"1790": {
 		"name": "t1_recon_teach_spycam",
-		"desc": "Learn how to open the spycam"
+		"desc": "Learn how to open the spycam",
+		"type": "Task"
 	},
 	"1793": {
 		"name": "t1_recon_spytarget_dmitri",
-		"desc": "Take picture of \"Dimitri\""
+		"desc": "Take picture of \"Dimitri\"",
+		"type": "Task"
 	},
 	"1794": {
 		"name": "t1_recon_spytarget_access_point",
-		"desc": "Take picture of \"Generator\""
+		"desc": "Take picture of \"Generator\"",
+		"type": "Task"
 	},
 	"1795": {
 		"name": "t1_recon_spytarget_talon_plates",
-		"desc": "Take picture of \"Money Printer\""
+		"desc": "Take picture of \"Money Printer\"",
+		"type": "Task"
 	},
 	"1796": {
 		"name": "t1_recon_complete",
-		"desc": "Complete \"Breaking and Entering\""
+		"desc": "Complete \"Breaking and Entering\"",
+		"type": "Job Complete"
 	},
 	"1799": {
 		"name": "t1_chalktalk1",
-		"desc": "First Bentley slideshow, unlocks 2 jobs"
+		"desc": "First Bentley slideshow, unlocks 2 jobs",
+		"type": "Chalktalk"
 	},
 	"1800": {
 		"name": "t1_binoc_reminder",
-		"desc": "Bentley binoculars tip ????????"
+		"desc": "Bentley binoculars tip ????????",
+		"type": "Helper"
 	},
 	"1801": {
 		"name": "t1_booty_reminder",
-		"desc": "Steal the goblet from the courtyard"
+		"desc": "Steal the goblet from the courtyard",
+		"type": "Helper"
 	},
 	"1804": {
 		"name": "t1_brawl_box1",
-		"desc": "Destroy the first box"
+		"desc": "Destroy the first box",
+		"type": "Task"
 	},
 	"1805": {
 		"name": "t1_brawl_box2",
-		"desc": "Destroy the second box"
+		"desc": "Destroy the second box",
+		"type": "Task"
 	},
 	"1806": {
 		"name": "t1_brawl_box3",
-		"desc": "Destroy the third box"
+		"desc": "Destroy the third box",
+		"type": "Task"
 	},
 	"1807": {
 		"name": "t1_brawl_complete",
-		"desc": "\"Silence the Alarms\" complete (despawn generators?)"
+		"desc": "\"Silence the Alarms\" complete (despawn generators?)",
+		"type": "Job Complete"
 	},
 	"1810": {
 		"name": "t1_bug_ext_intro",
-		"desc": "Job trigger for \"Bug Dimitri's Office\""
+		"desc": "Job trigger for \"Bug Dimitri's Office\"",
+		"type": "Job Start"
 	},
 	"1811": {
 		"name": "t1_bug_intro",
-		"desc": "Enter the nightclub through the window"
+		"desc": "Enter the nightclub through the window",
+		"type": "Task"
 	},
 	"1812": {
 		"name": "t1_bug_vent",
-		"desc": "Enter Dimitri's office through the vent (sus)"
+		"desc": "Enter Dimitri's office through the vent (sus)",
+		"type": "Cutscene"
 	},
 	"1813": {
 		"name": "t1_bug_swap",
-		"desc": "Swap the bugged painting for the real one"
+		"desc": "Swap the bugged painting for the real one",
+		"type": "Task"
 	},
 	"1814": {
 		"name": "t1_bug_office_door",
-		"desc": "Leave Dimitri's office through the front door"
+		"desc": "Leave Dimitri's office through the front door",
+		"type": "Task"
 	},
 	"1815": {
 		"name": "t1_bug_complete",
-		"desc": "Complete \"Bug Dimitri's Office\""
+		"desc": "Complete \"Bug Dimitri's Office\"",
+		"type": "Job Complete"
 	},
 	"1817": {
 		"name": "t1_bug_r1_reminder",
-		"desc": "???"
+		"desc": "???",
+		"type": "Helper"
 	},
 	"1819": {
 		"name": "t1_follow_start",
-		"desc": "Ring the bell and follow Dimitri"
+		"desc": "Ring the bell and follow Dimitri",
+		"type": "Task"
 	},
 	"1821": {
 		"name": "t1_follow_dmitri_on_streets",
-		"desc": "Watch Dimitri enter the waterpump door"
+		"desc": "Watch Dimitri enter the waterpump door",
+		"type": "Task"
 	},
 	"1822": {
 		"name": "t1_follow_complete",
-		"desc": "Complete \"Follow Dimitri\""
+		"desc": "Complete \"Follow Dimitri\"",
+		"type": "Job Complete"
 	},
 	"1835": {
 		"name": "t1_chalktalk2",
-		"desc": "Second Bentley slideshow, unlocks 3 jobs"
+		"desc": "Second Bentley slideshow, unlocks 3 jobs",
+		"type": "Chalktalk"
 	},
 	"1837": {
 		"name": "t1_moulin_intro",
-		"desc": "Go over the mission with Bentley"
+		"desc": "Go over the mission with Bentley",
+		"type": "Task"
 	},
 	"1839": {
 		"name": "t1_moulin_key1",
-		"desc": "Pickpocket the guard's key"
+		"desc": "Pickpocket the guard's key",
+		"type": "Task"
 	},
 	"1840": {
 		"name": "t1_moulin_key2",
-		"desc": "Pickpocket the guard's key"
+		"desc": "Pickpocket the guard's key",
+		"type": "Task"
 	},
 	"1841": {
 		"name": "t1_moulin_key3",
-		"desc": "Pickpocket the guard's key"
+		"desc": "Pickpocket the guard's key",
+		"type": "Task"
 	},
 	"1842": {
 		"name": "t1_moulin_key4",
-		"desc": "Pickpocket the guard's key"
+		"desc": "Pickpocket the guard's key",
+		"type": "Task"
 	},
 	"1843": {
 		"name": "t1_moulin_key5",
-		"desc": "Pickpocket the guard's key"
+		"desc": "Pickpocket the guard's key",
+		"type": "Task"
 	},
 	"1844": {
 		"name": "t1_moulin_key6",
-		"desc": "Pickpocket the guard's key"
+		"desc": "Pickpocket the guard's key",
+		"type": "Task"
 	},
 	"1845": {
 		"name": "t1_moulin_keys_complete",
-		"desc": "Pickpocket all six guards' keys"
+		"desc": "Pickpocket all six guards' keys",
+		"type": "Task"
 	},
 	"1846": {
 		"name": "t1_moulin_shut_off_fans",
-		"desc": "Use the control panel to shut off the fans"
+		"desc": "Use the control panel to shut off the fans",
+		"type": "Task"
 	},
 	"1848": {
 		"name": "t1_moulin_complete",
-		"desc": "Complete \"Theater Pickpocketing\""
+		"desc": "Complete \"Theater Pickpocketing\"",
+		"type": "Job Complete"
 	},
 	"1850": {
 		"name": "t1_pickpocket_reminder",
-		"desc": "???"
+		"desc": "???",
+		"type": "Helper"
 	},
 	"1852": {
 		"name": "t1_neela_intro",
-		"desc": "Job trigger for \"Moonlight Rendezvous\""
+		"desc": "Job trigger for \"Moonlight Rendezvous\"",
+		"type": "Job Start"
 	},
 	"1857": {
 		"name": "t1_neela_chase",
-		"desc": "Keep up with Neyla"
+		"desc": "Keep up with Neyla",
+		"type": "Task"
 	},
 	"1858": {
 		"name": "t1_neela_complete",
-		"desc": "Neyla says \"Well done, Sly...\""
+		"desc": "Neyla says \"Well done, Sly...\"",
+		"type": "Job Complete"
 	},
 	"1860": {
 		"name": "t1_disco_bomb_teach",
-		"desc": "Sly teaches you how to drop bombs"
+		"desc": "Sly teaches you how to drop bombs",
+		"type": "Task"
 	},
 	"1861": {
 		"name": "t1_disco_laser_entrance1",
-		"desc": "Destroy the first laser bar in the entryway"
+		"desc": "Destroy the first laser bar in the entryway",
+		"type": "Task"
 	},
 	"1862": {
 		"name": "t1_disco_sleep_teach",
-		"desc": "Sly teaches you how to shoot sleep darts"
+		"desc": "Sly teaches you how to shoot sleep darts",
+		"type": "Task"
 	},
 	"1863": {
 		"name": "t1_disco_laser_entrance2",
-		"desc": "Destroy the second laser bar in the entryway"
+		"desc": "Destroy the second laser bar in the entryway",
+		"type": "Task"
 	},
 	"1864": {
 		"name": "t1_disco_intro",
-		"desc": "Disco interior binocucom cutscene"
+		"desc": "Disco interior binocucom cutscene",
+		"type": "Task"
 	},
 	"1865": {
 		"name": "t1_disco_laser_bar",
-		"desc": "Destroy the laser bar inside the club"
+		"desc": "Destroy the laser bar inside the club",
+		"type": "Task"
 	},
 	"1866": {
 		"name": "t1_disco_bomb1",
-		"desc": "Blow up the 1st support beam"
+		"desc": "Blow up the 1st support beam",
+		"type": "Task"
 	},
 	"1868": {
 		"name": "t1_disco_bomb2",
-		"desc": "Blow up the 2nd support beam"
+		"desc": "Blow up the 2nd support beam",
+		"type": "Task"
 	},
 	"1870": {
 		"name": "t1_disco_bomb3",
-		"desc": "Blow up the 3rd support beam"
+		"desc": "Blow up the 3rd support beam",
+		"type": "Task"
 	},
 	"1872": {
 		"name": "t1_disco_bomb4",
-		"desc": "Blow up the 4th support beam"
+		"desc": "Blow up the 4th support beam",
+		"type": "Task"
 	},
 	"1875": {
 		"name": "t1_disco_complete",
-		"desc": "Complete \"Disco Demolitions\" "
+		"desc": "Complete \"Disco Demolitions\" ",
+		"type": "Job Complete"
 	},
 	"1878": {
 		"name": "t1_waterpump_intro",
-		"desc": "Job trigger for \"Waterpump Destruction\""
+		"desc": "Job trigger for \"Waterpump Destruction\"",
+		"type": "Job Start"
 	},
 	"1879": {
 		"name": "t1_waterpump_murray_teach",
-		"desc": "Learn how to pick up and throw stuff"
+		"desc": "Learn how to pick up and throw stuff",
+		"type": "Task"
 	},
 	"1880": {
 		"name": "t1_waterpump_box1",
-		"desc": "Destroy the first generator"
+		"desc": "Destroy the first generator",
+		"type": "Task"
 	},
 	"1881": {
 		"name": "t1_waterpump_box2",
-		"desc": "Destroy the second generator"
+		"desc": "Destroy the second generator",
+		"type": "Task"
 	},
 	"1882": {
 		"name": "t1_waterpump_guard",
-		"desc": "Sacrifice the guard to the laser gods"
+		"desc": "Sacrifice the guard to the laser gods",
+		"type": "Task"
 	},
 	"1884": {
 		"name": "t1_waterpump_beak_tank",
-		"desc": "Destroy the waterpump tank"
+		"desc": "Destroy the waterpump tank",
+		"type": "Task"
 	},
 	"1885": {
 		"name": "t1_waterpump_complete",
-		"desc": "\"Waterpump Destruction\" complete"
+		"desc": "\"Waterpump Destruction\" complete",
+		"type": "Job Complete"
 	},
 	"1888": {
 		"name": "t1_chalktalk3",
-		"desc": "Third Bentley slideshow, unlocks the operation"
+		"desc": "Third Bentley slideshow, unlocks the operation",
+		"type": "Chalktalk"
 	},
 	"1890": {
 		"name": "t1_heist_intro",
-		"desc": "Job trigger for \"Operation: Thunder Beak\""
+		"desc": "Job trigger for \"Operation: Thunder Beak\"",
+		"type": "Job Start"
 	},
 	"1893": {
 		"name": "t1_heist_open_piperoom",
-		"desc": "Murray says \"Let's get to that water tower\""
+		"desc": "Murray says \"Let's get to that water tower\"",
+		"type": "Task"
 	},
 	"1895": {
 		"name": "t1_heist_piperoom",
-		"desc": "Jump into Murray's arms"
+		"desc": "Jump into Murray's arms",
+		"type": "Task"
 	},
 	"1896": {
 		"name": "t1_heist_piperoom_complete",
-		"desc": "Watertower block destroyed"
+		"desc": "Watertower block destroyed",
+		"type": "Task"
 	},
 	"1898": {
 		"name": "t1_heist_2_pickpocket_guard",
-		"desc": "Bentley says \"success!\""
+		"desc": "Bentley says \"success!\"",
+		"type": "Task"
 	},
 	"1900": {
 		"name": "t1_heist_3_rendezvous",
-		"desc": "Checkpoint, pickpocket repair guy"
+		"desc": "Checkpoint, pickpocket repair guy",
+		"type": "Task"
 	},
 	"1902": {
 		"name": "t1_heist_4_hijack_truck",
-		"desc": "Head back to Bentley"
+		"desc": "Head back to Bentley",
+		"type": "Task"
 	},
 	"1904": {
 		"name": "t1_heist_5_peacock_climb",
-		"desc": "Murray \"Let's head to the repair truck\""
+		"desc": "Murray \"Let's head to the repair truck\"",
+		"type": "Task"
 	},
 	"1906": {
 		"name": "t1_heist_7_shoot_harpoon",
-		"desc": "Checkpoint, Murray says \"i'll take the wheel\""
+		"desc": "Checkpoint, Murray says \"i'll take the wheel\"",
+		"type": "Task"
 	},
 	"1909": {
 		"name": "t1_heist_8_siege",
-		"desc": "Checkpoint, shoot harpoon"
+		"desc": "Checkpoint, shoot harpoon",
+		"type": "Task"
 	},
 	"1911": {
 		"name": "t1_heist_fight_guards",
-		"desc": "Defend repair truck, kill all rats"
+		"desc": "Defend repair truck, kill all rats",
+		"type": "Task"
 	},
 	"1918": {
 		"name": "t1_dimitri_boss_start",
-		"desc": "Enter the Printing Press room"
+		"desc": "Enter the Printing Press room",
+		"type": "Task"
 	},
 	"1920": {
 		"name": "t1_dimitri_boss_intro",
-		"desc": "Tell Dimitri his suit sucks"
+		"desc": "Tell Dimitri his suit sucks",
+		"type": "Task"
 	},
 	"1929": {
 		"name": "t1_dimitri_boss_fight",
-		"desc": "Battle Dimitri"
+		"desc": "Battle Dimitri",
+		"type": "Task"
 	},
 	"1931": {
 		"name": "t1_dimitri_boss_complete",
-		"desc": "Defeat Dimitri"
+		"desc": "Defeat Dimitri",
+		"type": "Task"
 	},
 	"1934": {
 		"name": "t1_complete",
-		"desc": "Complete episode \"The Black Chateau\""
+		"desc": "Complete episode \"The Black Chateau\"",
+		"type": "Task"
 	},
 	"": {
 		"name": "",
-		"desc": "press room"
+		"desc": "press room",
+		"type": "Task"
 	},
 	"2168": {
 		"name": "t3_intro",
-		"desc": "\"The Predator Awakes\" intro cinematic"
+		"desc": "\"The Predator Awakes\" intro cinematic",
+		"type": "Task"
 	},
 	"2171": {
 		"name": "t3_recon_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2172": {
 		"name": "t3_recon_enter_pipe",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2174": {
 		"name": "t3_recon_int_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2175": {
 		"name": "t3_recon_teach_rail_slide",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2176": {
 		"name": "t3_recon_spy_entrance",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2178": {
 		"name": "t3_recon_spytarget_heart",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2179": {
 		"name": "t3_recon_spytarget_mechanics",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2180": {
 		"name": "t3_recon_spytarget_entrance",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2181": {
 		"name": "t3_recon_spytarget_rajan",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2182": {
 		"name": "t3_recon_spycam_complete",
-		"desc": "Take recon photos"
+		"desc": "Take recon photos",
+		"type": "Task"
 	},
 	"2183": {
 		"name": "t3_recon_complete",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2186": {
 		"name": "t3_chalktalk_1",
-		"desc": ""
+		"desc": "",
+		"type": "Chalktalk"
 	},
 	"2188": {
 		"name": "t3_waterbug_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2189": {
 		"name": "t3_waterbug_deposit",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2190": {
 		"name": "t3_waterbug_complete",
-		"desc": "Get the bug in Rajan's office"
+		"desc": "Get the bug in Rajan's office",
+		"type": "Task"
 	},
 	"2195": {
 		"name": "t3_free_elephant_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2197": {
 		"name": "t3_free_elephant_spice1",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2199": {
 		"name": "t3_free_elephant_spice2",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2201": {
 		"name": "t3_free_elephant_spice3",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2203": {
 		"name": "t3_free_elephant_spice4",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2205": {
 		"name": "t3_free_elephant_spice5",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2207": {
 		"name": "t3_free_elephant_spice6",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2209": {
 		"name": "t3_free_elephant_spice_complete",
-		"desc": "Collect all necessary spice"
+		"desc": "Collect all necessary spice",
+		"type": "Task"
 	},
 	"2210": {
 		"name": "t3_free_elephant_deposit_spice",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2211": {
 		"name": "t3_free_elephant_complete",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2214": {
 		"name": "t3_heartneela_heartneela_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2219": {
 		"name": "t3_heartneela_at_door",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2220": {
 		"name": "t3_heartneela_open_door",
-		"desc": "Keep up with Neyla"
+		"desc": "Keep up with Neyla",
+		"type": "Task"
 	},
 	"2224": {
 		"name": "t3_heartneela_int_checkpoint",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2225": {
 		"name": "t3_heartneela_key_1",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2226": {
 		"name": "t3_heartneela_key_2",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2228": {
 		"name": "t3_heartneela_drop_heart",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2230": {
 		"name": "t3_heartneela_complete",
-		"desc": "Get half of Clockwerk heart"
+		"desc": "Get half of Clockwerk heart",
+		"type": "Task"
 	},
 	"2239": {
 		"name": "t3_lead_rajan_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2240": {
 		"name": "t3_lead_rajan_sleep1",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2243": {
 		"name": "t3_lead_rajan_retrieve1",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2245": {
 		"name": "t3_lead_rajan_item1_complete",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2246": {
 		"name": "t3_lead_rajan_sleep2",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2249": {
 		"name": "t3_lead_rajan_retrieve2",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2251": {
 		"name": "t3_lead_rajan_item2_complete",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2252": {
 		"name": "t3_lead_rajan_sleep3",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2255": {
 		"name": "t3_lead_rajan_retrieve3",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2257": {
 		"name": "t3_lead_rajan_item3_complete",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2258": {
 		"name": "t3_lead_rajan_complete",
-		"desc": "Get Rajan's three blueprints"
+		"desc": "Get Rajan's three blueprints",
+		"type": "Task"
 	},
 	"2265": {
 		"name": "t3_tntbarrel_intro_ext",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2266": {
 		"name": "t3_tntbarrel_fence1",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2267": {
 		"name": "t3_tntbarrel_fence2",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2268": {
 		"name": "t3_tntbarrel_fence3",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2269": {
 		"name": "t3_tntbarrel_fence4",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2270": {
 		"name": "t3_tntbarrel_intro_int",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2271": {
 		"name": "t3_tntbarrel_grinder",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2272": {
 		"name": "t3_tntbarrel_reminder",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2273": {
 		"name": "t3_tntbarrel_complete",
-		"desc": "Destroy the spice grinder"
+		"desc": "Destroy the spice grinder",
+		"type": "Task"
 	},
 	"2279": {
 		"name": "t3_chalktalk2",
-		"desc": ""
+		"desc": "",
+		"type": "Chalktalk"
 	},
 	"2283": {
 		"name": "t3_turret_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2284": {
 		"name": "t3_turret_complete",
-		"desc": "Take out Rajan's dam"
+		"desc": "Take out Rajan's dam",
+		"type": "Task"
 	},
 	"2287": {
 		"name": "t3_steal_ruby_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2288": {
 		"name": "t3_steal_ruby_intro_murray",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2289": {
 		"name": "t3_steal_ruby_ruby_trainer",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2290": {
 		"name": "t3_steal_ruby_ruby_return1",
-		"desc": "Get ruby to the first buyer"
+		"desc": "Get ruby to the first buyer",
+		"type": "Task"
 	},
 	"2291": {
 		"name": "t3_steal_ruby_return1_complete",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2292": {
 		"name": "t3_steal_ruby_return2",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2293": {
 		"name": "t3_steal_ruby_complete",
-		"desc": "Get ruby to the final buyer"
+		"desc": "Get ruby to the final buyer",
+		"type": "Task"
 	},
 	"2295": {
 		"name": "t3_chalktalk3",
-		"desc": ""
+		"desc": "",
+		"type": "Chalktalk"
 	},
 	"2297": {
 		"name": "t3_heist_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2298": {
 		"name": "t3_heist1_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2302": {
 		"name": "t3_heist1_murray_get_to_mouth",
-		"desc": "Get Murray to the lever"
+		"desc": "Get Murray to the lever",
+		"type": "Task"
 	},
 	"2303": {
 		"name": "t3_heist2_start_lift",
-		"desc": "Begin lifting the lever"
+		"desc": "Begin lifting the lever",
+		"type": "Task"
 	},
 	"2305": {
 		"name": "t3_heist3_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2308": {
 		"name": "t3_heist3_protect_murray",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2312": {
 		"name": "t3_heist4_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2317": {
 		"name": "t3_heist4_lift",
-		"desc": "Finish lifting the lever"
+		"desc": "Finish lifting the lever",
+		"type": "Task"
 	},
 	"2319": {
 		"name": "t3_heist5_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2321": {
 		"name": "t3_heist5_destructo",
-		"desc": "Get TNT barrel into mouth"
+		"desc": "Get TNT barrel into mouth",
+		"type": "Task"
 	},
 	"2327": {
 		"name": "t3_boss_intro",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2331": {
 		"name": "t3_boss_lightning",
-		"desc": "Get to Rajan"
+		"desc": "Get to Rajan",
+		"type": "Task"
 	},
 	"2332": {
 		"name": "t3_boss_sly_capture",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2339": {
 		"name": "t3_boss_pool",
-		"desc": ""
+		"desc": "",
+		"type": "Task"
 	},
 	"2342": {
 		"name": "t3_boss_complete",
-		"desc": "Defeat Rajan"
+		"desc": "Defeat Rajan",
+		"type": "Task"
 	},
 	"2350": {
 		"name": "t3_complete",
-		"desc": "Complete episode \"The Predator Awakes\""
+		"desc": "Complete episode \"The Predator Awakes\"",
+		"type": "Task"
 	}
 }

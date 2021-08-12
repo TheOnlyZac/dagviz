@@ -106,6 +106,22 @@ class Node {
         }
     }
 
+    get description() {
+        if ((BUILD == BUILDS.sly2) && (this.id in tasks[BUILDS.sly2.retail])) {
+            return tasks[BUILDS.sly2.retail][this.id].desc;
+        } else {
+            return `Node at address 0x${this.address}`;
+        }
+    }
+
+    get type() {
+        if ((BUILD == BUILDS.sly2) && (this.id in tasks[BUILDS.sly2.retail])) {
+            return tasks[BUILDS.sly2.retail][this.id].type;
+        } else {
+            return 'Task';
+        }
+    }
+
     // generate the style string for the dot node
     get style() {
         /* colors:
@@ -114,11 +130,17 @@ class Node {
             2: blue
             3: gray
         */
-        let label = this.name;
+        let name = this.name;
+        let tooltip = this.description.split('"').join('\\"');
         let fillcolor = ['#F77272', '#9EE89B', '#61D6F0', '#C2C2C2'][this.state];
         let color = ['#8A0808', '#207F1D', '#0C687D', '#4E4E4E'][this.state];
-        let shape = (this.checkpoint == 0xFFFFFFFF) ? 'oval' : 'diamond';
-        return `[label="${label}" fillcolor="${fillcolor}" color="${color}" shape="${shape}" width=2 height=0.75]`;
+        let shape = (this.checkpoint == 0xFFFFFFFF)
+            ? (this.type == 'Chalktalk')
+                ? 'octagon'
+                : 'oval'
+            : 'diamond';
+        return `[label="${name}" tooltip="${tooltip}" fillcolor="${fillcolor}" ` +
+                `color="${color}" shape="${shape}" width=1 height=0.5]`;
     }
     
     // force the state of the task, maintaining the rules of the dag
@@ -271,7 +293,7 @@ class Graph {
         let dots = [
             'digraph {',
             'graph [style="bold, rounded" bgcolor="#ffffffff" fontname="courier"]',
-            'node [style="filled, bold, rounded" fontname="courier" fontcolor="black" shape="oval"]',
+            'node [style="filled, bold, rounded" fontname="calibri" fontcolor="black" shape="oval"]',
             'fillcolor="#ffffff00"'
         ];
 
@@ -302,7 +324,7 @@ class Subgraph {
         if (cluster) dots.push(`\tsubgraph cluster${hex(this.id)} {`);
         else dots.push(`\tsubgraph ${hex(this.id)} {`);
 
-        dots.push(`\tlabel="${hex(this.id)}"\n\tbgcolor="#ffffff40"`);
+        //dots.push(`\tlabel="${hex(this.id)}"\n\tbgcolor="#ffffff40"`);
 
         for (var node of this.nodes) {
             dots.push('\t\t' + node.dotNode())
@@ -331,9 +353,9 @@ function hex(num) {
 function reattach() {
     try {
         processObject = memoryjs.openProcess('pcsx2.exe');
-        console.log("Connected to PCSX2");
+        //console.log("Connected to PCSX2");
     } catch(err) {
-        console.log("PCSX2 not detected. Make sure PCSX2 is open.");
+        //console.log("PCSX2 not detected. Make sure PCSX2 is open.");
         processObject = undefined;
         return;
     }
@@ -341,7 +363,7 @@ function reattach() {
 
 function detectGame() {
     if (readMemory(0x92CE0, memoryjs.UINT32) != 1) {
-        console.log("No game detected. Make sure the game is running.");
+        //console.log("No game detected. Make sure the game is running.");
         GAME = BUILD = -1;
         return;
     }
@@ -362,7 +384,7 @@ function detectGame() {
         BUILD = BUILDS.sly3;
     }
     else { // Invalid/Unsupported build
-        console.log("Invalid game detected. Make sure Sly 2 or 3 (NTSC) is running.");
+        //console.log("Invalid game detected. Make sure Sly 2 or 3 (NTSC) is running.");
         GAME = BUILD = -1;
     }
 }
@@ -418,8 +440,8 @@ function createWindow() {
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    win.webContents.openDevTools()
-    console.log("DO NOT FORGOT TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
+    //win.webContents.openDevTools()
+    //console.log("DO NOT FORGOT TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
 
     // Return the new BrowserWindow
     return win;
@@ -433,7 +455,7 @@ app.whenReady().then(() => {
     let rawdata = fs.readFileSync('tasks-sly2.json');
     tasks[BUILDS.sly2.retail] = JSON.parse(rawdata);
 
-    // Init empty Draph
+    // Init empty Graph
     dag = new Graph();
 
     // Try to update graph and send dot text to window every 500ms

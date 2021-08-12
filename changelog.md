@@ -3,6 +3,8 @@
 ## v0.5.0
 * App doesn't crash when PCSX2 or Sly aren't running
 * Added task names for Sly2 Ep1 and Ep3
+* Added descriptions and types to node data
+* Tweaked graph appearance
 
 ## v0.4.0
 * Added support for Sly 3: Honor Among Thieves
