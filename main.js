@@ -144,77 +144,89 @@ class Node {
     }
     
     // force the state of the task, maintaining the rules of the dag
-    forceState(target, visited=[], skipParents=false) {
-        if (visited.indexOf(this.address) > -1) return; // if already checked, skip
-        visited.push(this.address); // now we're checking it, so add to visited array
+    forceState(newState, toSet={}) {
+        let visited = Object.keys(visited);
+        if (visited.indexOf(this.id) > -1) return; // if already checked, skip
 
-        if (target < 0 || target > 3) return; // if attempting to set an invalid value, abort
-        if (target == this.state) return // this state is already target, abort
-        if (target == 2 && this.job == 0) target = 3; // override setting a node outside a job to 2
+        toSet[this.id] = newState; // now we're checking it, so add to visited array
+
+        if (newState < 0 || newState > 3) return; // if attempting to set an invalid value, abort
+        if (newState == this.state) return // this state is already target, abort
+        if (newState == 2 && this.job == 0) newState = 3; // override setting a node outside a job to 2
 
         // iterate parents
         for (let parent of this.parents) {
             let p = new Node(parent);
 
-            if (target == UNAVAILABLE) {
+            if (newState == UNAVAILABLE) {
                 // if target state is unavailable,
                 if (p.state in [UNAVAILABLE, AVAILABLE]) {
                     // if parent state is unvailable or available,
                     // no change to parent is needed
-                    p.forceState(p.state, visited);
+                    p.forceState(p.state, toSet);
                 } else {
                     // if parent state is complete or final,
                     // parent should be available
-                    p.forceState(AVAILABLE, visited);
+                    p.forceState(AVAILABLE, toSet);
                 }
             } else {
                 // if target state is available, complete, or final...
                 if (p.job == 0) {
                     // if parent is not in a job, it should be final
-                    p.forceState(FINAL, visited);
+                    p.forceState(FINAL, toSet);
                 } else if (p.job != this.job) {
                     // if parent is in a job, and it's not the same as this nodes' job,
                     // it must be the last node in a job so, it must be final.
-                    p.forceState(FINAL, visited);
+                    p.forceState(FINAL, toSet);
                 } else {
                     // if parent is in a job, and it is the same as this node's job...
-                    if (target == AVAILABLE) {
+                    if (newState == AVAILABLE) {
                         // if target state is available, parent must be complete.
-                        p.forceState(COMPLETE, visited)
+                        p.forceState(COMPLETE, toSet)
                     } else {
                         // if the target state is complete or final,
                         // parent must be complete or final, but either way,
                         // it should be the same a this node.
-                        p.forceState(target, visited);
+                        p.forceState(newState, toSet);
                     }
                 }
             }
         }
 
         // actually update dag state
-        this.state = target;
+        this.state = newState;
 
         // iterate children
         for (let child of this.children) {
             let c = new Node(child);
 
-            if (target in [UNAVAILABLE, AVAILABLE]) {
+            if (newState in [UNAVAILABLE, AVAILABLE]) {
                 // if target state is unavailable or available,
                 // child must be unavailable
-                c.forceState(UNAVAILABLE, visited);
-            } else if (target == COMPLETE) {
-                // if target state is complete,
-                // child must be available
-                c.forceState(AVAILABLE, visited);
+                c.forceState(UNAVAILABLE, toSet);
+            } else if (newState == COMPLETE) {
+                // if target state is complete...
+                for (let child2 of c.children) {
+                    if (child2.state in [AVAILABLE, COMPLETE]) {
+                        // if child2 has a child that is available or complete,
+                        // child must be complete
+                        c.forceState(COMPLETE, toSet);
+                    } else if (child2.state == UNAVAILABLE) {
+                        c.forceState(UNAVAILABLE);
+                    } else {
+                        // otherwise, it must be available
+                        c.forceState(AVAILABLE, toSet);
+                    }
+                }
             } else {
                 // if target state is final...
                 if (c.job == this.job) {
                     // if child node is in same job as this node,
                     // child must be final
-                    c.forceState(FINAL, visited);
+                    c.forceState(FINAL, toSet);
                 } else {
                     // otherwise, it must be available
-                    c.forceState(AVAILABLE, visited);
+                    c.forceState(AVAILABLE, toSet);
                 }
             }
         }
@@ -400,7 +412,7 @@ ipc.on('reset-dag', function() {
 });
 
 ipc.on('refresh-dag', function() {
-    dag.populateGraph();
+    dag.populateGraph(dag.head);
 });
 
 ipc.on('export-dot', function() {

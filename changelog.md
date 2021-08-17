@@ -2,8 +2,8 @@
 
 ## v0.5.0
 * App doesn't crash when PCSX2 or Sly aren't running
-* Added task names for Sly2 Ep1 and Ep3
-* Added descriptions and types to node data
+* Added task names/descriptions for Sly2 Ep1 and Ep3
+  - Special thanks to Sami for helping identify tasks
 * Tweaked graph appearance
 
 ## v0.4.0
