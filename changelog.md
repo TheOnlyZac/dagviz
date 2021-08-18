@@ -6,6 +6,7 @@
   - Special thanks to Sami for helping identify tasks
 * Tweaked graph appearance
 * Added app icon and custom titlebar
+* Temporarily removed state forcing (broken)
 
 ## v0.4.0
 * Added support for Sly 3: Honor Among Thieves
