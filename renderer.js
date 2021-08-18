@@ -87,6 +87,25 @@ window.addEventListener('DOMContentLoaded', () => {
         mousePos.y = e.pageY;
     })
 
+    /* TITLEBAR */
+
+    // Handle minimize window
+    $(document).on('click', '.win-min', () => {
+        ipc.send('minimize');
+    })
+
+    // Handle maximize window
+    $(document).on('click', '.win-max', () => {
+        ipc.send('maximize');
+    })
+
+    // Handle close window
+    $(document).on('click', '.win-close', () => {
+        window.close();
+    })
+
+    /* CONTEXT MENU */
+
     // On click, hide context menu
     $(document).on('click', function() {
         $contextMenu.hide();

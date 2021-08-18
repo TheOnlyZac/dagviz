@@ -5,9 +5,59 @@ html, body, body * {
 
 body {
     font-family: sans-serif;
-    overflow: hidden;
 
     user-select: none;
+}
+
+/* TITLEBAR */
+
+#titlebar {
+    display: grid;
+    grid-template-columns: auto auto auto;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 7px;
+
+    width: 100vw;
+
+    color: white;
+    font-family: Segoe UI, Helvetica;
+    font-size: 13px;
+
+    background-color: #37474F /* #388E3C */;
+
+    box-sizing: border-box;
+    
+    -webkit-app-region: drag;
+}
+
+.favicon {
+    height: 15px;
+    padding-right: 10px;
+
+    filter: drop-shadow(10);
+}
+
+#win-controls {
+    display: grid;
+    grid-template-columns: auto auto auto;
+
+    column-gap: 5px;
+}
+
+.win-icon {
+    width: 16px;
+
+    filter: invert(100%);
+    transition: filter 0.2s;
+
+    -webkit-app-region: no-drag;
+}
+
+.win-icon:hover {
+    filter: invert(85%);
 }
 
 /* GRAPH */

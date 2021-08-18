@@ -433,8 +433,10 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 600,
         height: 800,
-        //transparent: true,
-        //frame: false,
+        icon: 'img/appicon.png',
+        transparent: false,
+        frame: false,
+        hasShadow: true,
         autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true,
@@ -452,8 +454,8 @@ function createWindow() {
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    //win.webContents.openDevTools()
-    //console.log("DO NOT FORGOT TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
+    win.webContents.openDevTools()
+    console.log("DO NOT FORGET TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
 
     // Return the new BrowserWindow
     return win;
@@ -462,6 +464,14 @@ function createWindow() {
 // Called after Electron finishes initialization
 app.whenReady().then(() => {
     const win = createWindow();
+
+    // Handle minimize and maximize events
+    ipc.on('minimize', function() {
+        win.minimize();
+    })
+    ipc.on('maximize', function() {
+        win.maximize();
+    })
     
     // Load task names/descriptions from JSON file
     let rawdata = fs.readFileSync('tasks-sly2.json');
