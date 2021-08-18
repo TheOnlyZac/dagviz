@@ -1,7 +1,7 @@
 # DAGedit
 A real-time save editor for Sly 2 and Sly 3.
 
-<img src="thumb.png" alt="A screenshot of DAGedit." style="float: right; margin: 10px; width: 300px">
+<img src="img/thumb.png" alt="A screenshot of DAGedit." style="float: right; margin: 10px; width: 300px">
 
 ## Features
 * Explore the DAG and view node connections

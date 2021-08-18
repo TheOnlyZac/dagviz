@@ -5,6 +5,7 @@
 * Added task names/descriptions for Sly2 Ep1 and Ep3
   - Special thanks to Sami for helping identify tasks
 * Tweaked graph appearance
+* Added app icon and custom titlebar
 
 ## v0.4.0
 * Added support for Sly 3: Honor Among Thieves
