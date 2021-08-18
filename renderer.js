@@ -90,19 +90,13 @@ window.addEventListener('DOMContentLoaded', () => {
     /* TITLEBAR */
 
     // Handle minimize window
-    $(document).on('click', '.win-min', () => {
-        ipc.send('minimize');
-    })
+    $(document).on('click', '.win-min', () => ipc.send('minimize'))
 
     // Handle maximize window
-    $(document).on('click', '.win-max', () => {
-        ipc.send('maximize');
-    })
+    $(document).on('click', '.win-max', () => ipc.send('maximize'))
 
     // Handle close window
-    $(document).on('click', '.win-close', () => {
-        window.close();
-    })
+    $(document).on('click', '.win-close', () => window.close())
 
     /* CONTEXT MENU */
 

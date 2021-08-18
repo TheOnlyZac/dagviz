@@ -144,11 +144,10 @@ class Node {
     }
     
     // force the state of the task, maintaining the rules of the dag
-    forceState(newState, toSet={}) {
-        let visited = Object.keys(visited);
+    forceState(newState, visited=[]) {
         if (visited.indexOf(this.id) > -1) return; // if already checked, skip
 
-        toSet[this.id] = newState; // now we're checking it, so add to visited array
+        visited[this.id] = newState; // now we're checking it, so add to visited array
 
         if (newState < 0 || newState > 3) return; // if attempting to set an invalid value, abort
         if (newState == this.state) return // this state is already target, abort
@@ -163,31 +162,31 @@ class Node {
                 if (p.state in [UNAVAILABLE, AVAILABLE]) {
                     // if parent state is unvailable or available,
                     // no change to parent is needed
-                    p.forceState(p.state, toSet);
+                    p.forceState(p.state, visited);
                 } else {
                     // if parent state is complete or final,
                     // parent should be available
-                    p.forceState(AVAILABLE, toSet);
+                    p.forceState(AVAILABLE, visited);
                 }
             } else {
                 // if target state is available, complete, or final...
                 if (p.job == 0) {
                     // if parent is not in a job, it should be final
-                    p.forceState(FINAL, toSet);
+                    p.forceState(FINAL, visited);
                 } else if (p.job != this.job) {
                     // if parent is in a job, and it's not the same as this nodes' job,
                     // it must be the last node in a job so, it must be final.
-                    p.forceState(FINAL, toSet);
+                    p.forceState(FINAL, visited);
                 } else {
                     // if parent is in a job, and it is the same as this node's job...
                     if (newState == AVAILABLE) {
                         // if target state is available, parent must be complete.
-                        p.forceState(COMPLETE, toSet)
+                        p.forceState(COMPLETE, visited)
                     } else {
                         // if the target state is complete or final,
                         // parent must be complete or final, but either way,
                         // it should be the same a this node.
-                        p.forceState(newState, toSet);
+                        p.forceState(newState, visited);
                     }
                 }
             }
@@ -203,19 +202,19 @@ class Node {
             if (newState in [UNAVAILABLE, AVAILABLE]) {
                 // if target state is unavailable or available,
                 // child must be unavailable
-                c.forceState(UNAVAILABLE, toSet);
+                c.forceState(UNAVAILABLE, visited);
             } else if (newState == COMPLETE) {
                 // if target state is complete...
                 for (let child2 of c.children) {
                     if (child2.state in [AVAILABLE, COMPLETE]) {
                         // if child2 has a child that is available or complete,
                         // child must be complete
-                        c.forceState(COMPLETE, toSet);
+                        c.forceState(COMPLETE, visited);
                     } else if (child2.state == UNAVAILABLE) {
                         c.forceState(UNAVAILABLE);
                     } else {
                         // otherwise, it must be available
-                        c.forceState(AVAILABLE, toSet);
+                        c.forceState(AVAILABLE, visited);
                     }
                 }
             } else {
@@ -223,10 +222,10 @@ class Node {
                 if (c.job == this.job) {
                     // if child node is in same job as this node,
                     // child must be final
-                    c.forceState(FINAL, toSet);
+                    c.forceState(FINAL, visited);
                 } else {
                     // otherwise, it must be available
-                    c.forceState(AVAILABLE, toSet);
+                    c.forceState(AVAILABLE, visited);
                 }
             }
         }
@@ -454,8 +453,8 @@ function createWindow() {
     win.loadFile('index.html');
     
     // Open the dev tools on the main window
-    win.webContents.openDevTools()
-    console.log("DO NOT FORGET TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
+    //win.webContents.openDevTools()
+    //console.log("DO NOT FORGET TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
 
     // Return the new BrowserWindow
     return win;
@@ -466,10 +465,10 @@ app.whenReady().then(() => {
     const win = createWindow();
 
     // Handle minimize and maximize events
-    ipc.on('minimize', function() {
+    ipc.on('minimize', () => {
         win.minimize();
     })
-    ipc.on('maximize', function() {
+    ipc.on('maximize', () => {
         win.maximize();
     })
     
