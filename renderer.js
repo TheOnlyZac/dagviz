@@ -3,6 +3,8 @@ var d3 = require('d3-graphviz');
 var save = require('save-svg-as-png');
 window.$ = window.jQuery = require('jquery');
 
+const BUILDS = ['sly2ntsc', 'sly3ntsc', 'sly2mar', 'sly3aug', 'sly3sep'];
+
 /* Manage graph */
 
 // Init graph attributes
@@ -70,6 +72,15 @@ ipc.on('world-id', function(event, store) {
     $('#episode-title').text('Episode ' + store);
 });
 
+ipc.on('build', function(event, store) {
+    var $prefBuild = $('#pref-build');
+    if (store == -1) {
+        $prefBuild.val('none');
+    } else {
+        $prefBuild.val(BUILDS[store]);
+    }
+})
+
 ipc.on('alert', function(event, store) {
     window.alert(store);
 })
@@ -80,6 +91,8 @@ window.addEventListener('DOMContentLoaded', () => {
     // Hide Context Menu by default
     $contextMenu = $('#context-menu')
         .hide();
+
+    /* PANELS */
 
     // Init mouse position and dragged element
     var mousePos = { x: 0, y: 0 };
@@ -100,8 +113,6 @@ window.addEventListener('DOMContentLoaded', () => {
 			});
 		}
     })
-
-    /* PANELS */
     
 	// On Mouse Down event on drag handle
 	$('.drag-handle').on('mousedown', function() {
@@ -139,22 +150,26 @@ window.addEventListener('DOMContentLoaded', () => {
 		$panel = $(this).closest('.panel');
 		$panel.remove();
 	})
-	
-	/*  Preferences input */	
-	$('input').on('change', function() {
+
+	$('input, select').on('change', function() {
+        console.log("input change");
 		var $this = $(this);
-		switch ($this.attr('id')) {
-			case 'pref-autodetect':
-				let prefGame = document.getElementById('pref-game');
-				if ($this.is(':checked')) {
-					prefGame.disabled = true;
-				} else {
-					prefGame.disabled = false;
-				}
-				break;
-			default:
-				break;
-		}
+        if ($this.attr('id') == 'pref-autodetect') {
+            let prefBuild = document.getElementById('pref-build');
+            if ($this.is(':checked')) {
+                prefBuild.disabled = true
+            } else {
+                prefBuild.disabled = false;
+                $(prefBuild).val('none');
+            }
+        }
+        var settings = {
+            'auto-detect-build': $('#pref-autodetect').is(':checked'),
+            'build': $('#pref-build').val(),
+            'nodes-display': $('#pref-nodes-display').val(),
+            'base-address': $('#pref-base-address').val()
+        };
+        ipc.send('set-settings', settings);
 	})
 
     /* TITLEBAR */

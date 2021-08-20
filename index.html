@@ -51,12 +51,13 @@
         </div>
         
         <div class="panel-row">
-            <p>auto-detect game</p>
-            <input type="checkbox" name="autodetect" id="pref-autodetect"/>
+            <p>auto-detect build</p>
+            <input type="checkbox" name="autodetect" id="pref-autodetect" checked="true"/>
         </div>
         <div class="panel-row">
-            <p>game</p>
-            <select type="select" name="game" id="pref-game">
+            <p>build</p>
+            <select name="build" id="pref-build" disabled>
+                <option value="none">Select a build...</option>
                 <optgroup label="Sly 2">
                     <option value="sly2ntsc">Sly 2 NTSC</option>
                     <option value="sly2pal" disabled>Sly 2 PAL</option>
@@ -66,15 +67,15 @@
                     <option value="sly3pal" disabled>Sly 3 PAL</option>
                 </optgroup>
                 <optgroup label="Prototypes">
-                    <option value="sly2march">Sly 2 March Proto</option>
+                    <option value="sly2mar" disabled>Sly 2 March Proto</option>
                     <option value="sly3aug" disabled>Sly 3 August Proto</option>
                     <option value="sly3sep" disabled>Sly 3 Sept Proto</option>
                 </optgroup>
             </select>
         </div>
-        <div class="panel-row">
+        <!--<div class="panel-row">
             <p>nodes display</p>
-            <select>
+            <select name="nodes-display" id="pref-nodes-display">
                 <option value="address">Address</option>
                 <option value="id">ID</option>
                 <option value="name">Task Name</option>
@@ -83,8 +84,8 @@
         </div>
         <div class="panel-row">
             <p>base address</p>
-            <input type="text" placeholder="20000000"/>
-        </div>
+            <input type="text" name="base-address" id="pref-base-address" placeholder="20000000"/>
+        </div>-->
     </div>
 
     <div id="graph-container">

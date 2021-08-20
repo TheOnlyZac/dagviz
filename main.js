@@ -18,16 +18,19 @@ const COMPLETE = 2;
 const FINAL = 3;
 
 // Game/Build ID
-let BUILD = -1;
 let GAME = -1;
+let BUILD = -1;
 
 const BUILDS = Object.freeze({
-    sly2: 0,
-    sly3: 1,
-    sly2mar: 3,
-    sly3aug: 4,
-    sly3sep: 5
+    none: -1,
+    sly2ntsc: 0,
+    sly3ntsc: 1,
+    sly2mar: 2,
+    sly3aug: 3,
+    sly3sep: 4
 });
+
+let autoDetectBuild = true;
 
 // Declare DAG and tasks dict
 let dag;
@@ -53,23 +56,23 @@ class Node {
     }
 
     get id() {
-        return readMemory(this.address + Node.oId[BUILD], memoryjs.UINT32);
+        return readMemory(this.address + Node.oId[GAME], memoryjs.UINT32);
     }
 
     // get the current state of the task (0, 1, 2, 3)
     get state() {
-        return readMemory(this.address + Node.oState[BUILD], memoryjs.UINT32);
+        return readMemory(this.address + Node.oState[GAME], memoryjs.UINT32);
     }
     s
-    
+
     set state(val) {
-        writeMemory(this.address + Node.oState[BUILD], val, memoryjs.UINT32);
+        writeMemory(this.address + Node.oState[GAME], val, memoryjs.UINT32);
     }
 
     get children() {
         let children = []
-        let numChildren = readMemory(this.address + Node.oNumChildren[BUILD], memoryjs.UINT32);
-        let childrenArray = readMemory(this.address + Node.oChildrenArray[BUILD], memoryjs.UINT32); // retail: a4, proto: 98
+        let numChildren = readMemory(this.address + Node.oNumChildren[GAME], memoryjs.UINT32);
+        let childrenArray = readMemory(this.address + Node.oChildrenArray[GAME], memoryjs.UINT32); // retail: a4, proto: 98
         for (let i = 0; i < numChildren; i++) {
             children.push(readMemory(childrenArray + i*4, memoryjs.UINT32));
         }
@@ -78,8 +81,8 @@ class Node {
 
     get parents() {
         let parents = []
-        let numParents = readMemory(this.address + Node.oNumParents[BUILD], memoryjs.UINT32);
-        let parentsArray = readMemory(this.address + Node.oParentsArray[BUILD], memoryjs.UINT32); // retail: a4, proto: 98
+        let numParents = readMemory(this.address + Node.oNumParents[GAME], memoryjs.UINT32);
+        let parentsArray = readMemory(this.address + Node.oParentsArray[GAME], memoryjs.UINT32); // retail: a4, proto: 98
         for (let i = 0; i < numParents; i++) {
             parents.push(readMemory(parentsArray + i*4, memoryjs.UINT32));
         }
@@ -88,35 +91,35 @@ class Node {
 
     // get the job pointer for the task
     get job() {
-        return readMemory(this.address + Node.oJob[BUILD], memoryjs.UINT32); //retail
+        return readMemory(this.address + Node.oJob[GAME], memoryjs.UINT32); //retail
         //return readMemory(this.address + 0x74, memoryjs.UINT32); //proto
     }
 
     // get the checkpoint for this node
     get checkpoint() {
-        return readMemory(this.address + Node.oCheckpoint[BUILD], memoryjs.UINT32);
+        return readMemory(this.address + Node.oCheckpoint[GAME], memoryjs.UINT32);
     }
-    
+
     // get the tasks's name based on its ID
     get name() {
-        if ((BUILD == BUILDS.sly2) && (this.id in tasks[BUILDS.sly2.retail])) {
-            return tasks[BUILDS.sly2.retail][this.id].name;
+        if ((BUILD == BUILDS.sly2ntsc) && (this.id in tasks[BUILDS.sly2ntsc.retail])) {
+            return tasks[BUILDS.sly2ntsc.retail][this.id].name;
         } else {
             return this.id;
         }
     }
 
     get description() {
-        if ((BUILD == BUILDS.sly2) && (this.id in tasks[BUILDS.sly2.retail])) {
-            return tasks[BUILDS.sly2.retail][this.id].desc;
+        if ((BUILD == BUILDS.sly2ntsc) && (this.id in tasks[BUILDS.sly2ntsc.retail])) {
+            return tasks[BUILDS.sly2ntsc.retail][this.id].desc;
         } else {
             return `Node at address 0x${this.address}`;
         }
     }
 
     get type() {
-        if ((BUILD == BUILDS.sly2) && (this.id in tasks[BUILDS.sly2.retail])) {
-            return tasks[BUILDS.sly2.retail][this.id].type;
+        if ((BUILD == BUILDS.sly2ntsc) && (this.id in tasks[BUILDS.sly2ntsc.retail])) {
+            return tasks[BUILDS.sly2ntsc.retail][this.id].type;
         } else {
             return 'Task';
         }
@@ -142,7 +145,7 @@ class Node {
         return `[label="${name}" tooltip="${tooltip}" fillcolor="${fillcolor}" ` +
                 `color="${color}" shape="${shape}" width=1 height=0.5]`;
     }
-    
+
     // force the state of the task, maintaining the rules of the dag
     forceState(newState, visited=[]) {
         if (visited.indexOf(this.id) > -1) return; // if already checked, skip
@@ -255,13 +258,23 @@ class Graph {
         this.edgeText = '';
     }
 
-    populateGraph(head) {
-        this.head = head;
+    clear() {
+        this.head = undefined;
         this.clusters = {};
         this.edgeText = '';
+    }
+
+    populateGraph(head) {
+        this.clear()
+        this.head = head;
 
         var visited  = []
-        this.populateChildren(head, visited)
+
+        try {
+            this.populateChildren(head, visited)
+        } catch (e) {
+            console.log("Error populating dag");
+        }
     }
 
     // recursively populate the dag with a node and it's children
@@ -270,13 +283,16 @@ class Graph {
         if (visited.indexOf(nodeAddress) > 0) return;
         visited.push(nodeAddress);
 
+        if (visited.length > 500)
+            throw new Error("Maximum DAG size exceeded");
+
         let node = new Node(nodeAddress);
 
         // add node to cluster in dag based on job
         let job = node.job
         if (!(job in this.clusters)) this.clusters[job] = new Subgraph(job);
         this.clusters[node.job].nodes.push(node);
-        
+
         // add node edges to task (we only do this once because we assume they won't change)
         this.edgeText += `\t${node.dotEdges()}\n`;
 
@@ -375,7 +391,7 @@ function reattach() {
 function detectGame() {
     if (readMemory(0x92CE0, memoryjs.UINT32) != 1) {
         //console.log("No game detected. Make sure the game is running.");
-        GAME = BUILD = -1;
+        BUILD = -1;
         return;
     }
 
@@ -384,17 +400,15 @@ function detectGame() {
     var sly3Pid = readMemory(0x15390, memoryjs.STRING);
 
     if (sly2Pid.indexOf('SCUS_973.16') > -1) { // Sly 2 Retail '73.1'
-        GAME = 2;
-        BUILD = BUILDS.sly2;
+        GAME = 0;
+        BUILD = BUILDS.sly2ntsc;
+    } else if (sly3Pid.indexOf('SCUS_974.64') > -1) { // Sly 3 Retail '74.6'
+        GAME = 1;
+        BUILD = BUILDS.sly3ntsc;
     } else if (sly2Pid.indexOf('SCUS_971.98') > -1) { // Sly 2 March Proto '71.9'
-        GAME = 2;
-        BUILD = BIULDS.sly2mar;
-    }
-    else if (sly3Pid.indexOf('SCUS_974.64') > -1) { // Sly 3 Retail '74.6'
-        GAME = 3;
-        BUILD = BUILDS.sly3;
-    }
-    else { // Invalid/Unsupported build
+        GAME = 0;
+        BUILD = BUILDS.sly2mar;
+    } else { // Invalid/Unsupported build
         //console.log("Invalid game detected. Make sure Sly 2 or 3 (NTSC) is running.");
         GAME = BUILD = -1;
     }
@@ -426,6 +440,14 @@ ipc.on('export-dot', function() {
       })
 })
 
+ipc.on('set-settings', function(event, store) {
+    console.log(store);
+    autoDetectBuild = store['auto-detect-build'];
+    if (!autoDetectBuild) BUILD = BUILDS[store['build']];
+    var nodesDisplay = store['nodes-display'];
+    var baseAddress = store['base-address'];
+})
+
 // Create the browser window
 function createWindow() {
     // Initialize new window
@@ -451,7 +473,7 @@ function createWindow() {
 
     // Load the app index.html
     win.loadFile('index.html');
-    
+
     // Open the dev tools on the main window
     win.webContents.openDevTools()
     console.log("DO NOT FORGET TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
@@ -471,57 +493,65 @@ app.whenReady().then(() => {
     ipc.on('maximize', () => {
         win.maximize();
     })
-    
+
     // Load task names/descriptions from JSON file
     let rawdata = fs.readFileSync('tasks-sly2.json');
-    tasks[BUILDS.sly2.retail] = JSON.parse(rawdata);
+    tasks[BUILDS.sly2ntsc.retail] = JSON.parse(rawdata);
 
     // Init empty Graph
     dag = new Graph();
 
     // Try to update graph and send dot text to window every 500ms
     setInterval(() => {
-        // Handle PCSX2 not open
+        // Try to attach to PCSX2
         reattach();
         if (processObject == undefined) {
+            // Handle PCSX2 not detected
             win.webContents.send('no-game', 'PCSX2 not detected.');
         } else {
-            // Handle game not running
-            detectGame();
-            if (GAME == -1 || BUILD == -1) {
+            // Try to detect currently running game
+            if (autoDetectBuild) {
+                detectGame();
+                win.webContents.send('build', BUILD);
+            }
+
+            if (BUILD == -1) {
+                // Handle no game detected
                 win.webContents.send('no-game', 'Game not detected.');
             } else {
                 // Set DAG head node
                 var headAddr = [0x3e0b04, 0x478c8c, 0x3EE52C][BUILD];
 
                 // Read World ID from memory
-                var worldAddr = [0x3D4A60, 0x468D30][BUILD]
+                var worldAddr = [0x3D4A60, 0x468D30, 0x45C398][BUILD]
                 var worldId = readMemory(worldAddr, memoryjs.UINT32);
 
                 // Convert Sly 3 world IDs to episode IDs
-                if (BUILD == BUILDS.sly3) {
-                    if (worldId == 2) worldId = 'N/A'; // handle Sly 3 Hazard Room
-                    else if (worldId == 1) worldId = 0; // handle Sly 3 prologue
-                    else worldId -= 2; // handle all other Sly 3 worlds
-                }        
+                if (BUILD == BUILDS.sly3ntsc) {
+                    if (worldId == 2) worldId = 'N/A'; // Sly 3 Hazard Room
+                    else if (worldId == 1) worldId = 0; // Sly 3 Prologue
+                    else worldId -= 2; // all other Sly 3 worlds
+                }
 
-                if (BUILD == BUILDS.sly2 && worldId == 3) rootNode = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set head for Sly 2 ep3
-                else var rootNode = readMemory(headAddr, memoryjs.UINT32);
+                // Get root node of current dag
+                if (BUILD == BUILDS.sly2ntsc && worldId == 3) rootNode = readMemory(readMemory(0x3e0b04, memoryjs.UINT32) + 0x20, memoryjs.UINT32); // manually set root for Sly 2 ep3
+                else var rootNode = readMemory(headAddr, memoryjs.UINT32); // automatically get it for the rest of them
 
-                // Update DAG if it's out of date
+                // Check and update the dag, only if the root is not null
                 if (rootNode != 0x000000) {
-                    // check if the game is loading
+                    // Check if the game is loading
                     let isLoading = false;
-                    if (BUILD == BUILDS.sly2 && (readMemory(0x3D4830, memoryjs.UINT32) == 0x1)) isLoading = true;
-                    else if (BUILD == BUILDS.sly3 && (readMemory(0x467B00, memoryjs.UINT32) == 0x1)) isLoading = true
+                    if (BUILD == BUILDS.sly2ntsc && (readMemory(0x3D4830, memoryjs.UINT32) == 0x1)) isLoading = true;
+                    else if (BUILD == BUILDS.sly3ntsc && (readMemory(0x467B00, memoryjs.UINT32) == 0x1)) isLoading = true
+                    else isLoading = false;
 
-                    // if the dag head is out of date, wait until 1 sec after level load to repopulate
+                    // if the dag head is out of date, wait until 0.4 sec after level load to repopulate
                     if ((rootNode != dag.head) && !(isLoading)) {
                         setTimeout(() => {
                             dag.populateGraph(rootNode);
                         }, 400);
                     }
-                    
+
                     // send the dot text to the window
                     win.webContents.send('dot-text', dag.dot());
                     win.webContents.send('world-id', worldId);
