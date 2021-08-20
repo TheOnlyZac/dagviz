@@ -20,22 +20,70 @@
             <img class="win-icon win-max" src="img/maximize.png"></img>
             <img class="win-icon win-close" src="img/close.png"></img>
         </div>
+    </div>       
+    <div id="episode-titlebox" class="panel">
+        <h1 id="episode-title" class="panel-row">DAGviz</h1>
     </div>
-    <div id="gui">        
-        <div class="box"><p id="episode-title">DAGviz</p></div>
-        <div id="context-menu" class="box">
-            <div class="context-btn copy-address">Node address: 0x<span class="node-address"></span></div>
-            <hr/>
-            <!--<div class="context-btn force-state" data-state=0><p>Set state to Unavailable</p></div>-->
-            <!--<div class="context-btn force-state" data-state=1>Set state to Available</div>
-            <div class="context-btn force-state" data-state=2>Set state to Complete</div>
-            <div class="context-btn force-state" data-state=3>Set state to Final</div>
-            <hr/>-->
-            <div class="context-btn reset-dag">Reset all tasks</div>
-            <div class="context-btn refresh-dag">Refresh graph</div>
-            <hr/>
-            <div class="context-btn export-dot">Export graph as DOT text</div>
-            <div class="context-btn export-png">Save current view as PNG</div>
+
+    <div id="context-menu" class="panel">
+        <div class="panel-row context-btn copy-address">Node address: 0x<span class="node-address"></span></div>
+        <hr/>
+        <!--<div class="context-btn force-state" data-state=0><p>Set state to Unavailable</p></div>-->
+        <!--<div class="context-btn force-state" data-state=1>Set state to Available</div>
+        <div class="context-btn force-state" data-state=2>Set state to Complete</div>
+        <div class="context-btn force-state" data-state=3>Set state to Final</div>
+        <hr/>-->
+        <div class="panel-row context-btn reset-dag">Reset all tasks</div>
+        <div class="panel-row context-btn refresh-dag">Refresh graph</div>
+        <hr/>
+        <div class="panel-row context-btn export-dot">Export graph as DOT text</div>
+        <div class="panel-row context-btn export-png">Save current view as PNG</div>
+    </div>
+    
+    <!-- PREFERENCES PANEL -->
+    <div id="preferences" class="panel">
+        <div class="panel-row panel-title">
+            <p>Settings</p>
+            <div>
+                <span class="showhide-btn">👁</span>
+                <span class="drag-handle">✥</span>
+            </div>
+        </div>
+        
+        <div class="panel-row">
+            <p>auto-detect game</p>
+            <input type="checkbox" name="autodetect" id="pref-autodetect"/>
+        </div>
+        <div class="panel-row">
+            <p>game</p>
+            <select type="select" name="game" id="pref-game">
+                <optgroup label="Sly 2">
+                    <option value="sly2ntsc">Sly 2 NTSC</option>
+                    <option value="sly2pal" disabled>Sly 2 PAL</option>
+                </optgroup>
+                <optgroup label="Sly 3">
+                    <option value="sly3ntsc">Sly 3 NTSC</option>
+                    <option value="sly3pal" disabled>Sly 3 PAL</option>
+                </optgroup>
+                <optgroup label="Prototypes">
+                    <option value="sly2march">Sly 2 March Proto</option>
+                    <option value="sly3aug" disabled>Sly 3 August Proto</option>
+                    <option value="sly3sep" disabled>Sly 3 Sept Proto</option>
+                </optgroup>
+            </select>
+        </div>
+        <div class="panel-row">
+            <p>nodes display</p>
+            <select>
+                <option value="address">Address</option>
+                <option value="id">ID</option>
+                <option value="name">Task Name</option>
+                <option value="description">Description</option>
+            </select>
+        </div>
+        <div class="panel-row">
+            <p>base address</p>
+            <input type="text" placeholder="20000000"/>
         </div>
     </div>
 

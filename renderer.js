@@ -64,8 +64,6 @@ ipc.on('no-game', function(event, store) {
 /* Manage GUI */
 
 // GUI elements
-let contextMenu;
-let mousePos = { x:0, y:0 };
 
 // Handle receiveing world ID from main.js
 ipc.on('world-id', function(event, store) {
@@ -78,14 +76,86 @@ ipc.on('alert', function(event, store) {
 
 // Wait for document ready
 window.addEventListener('DOMContentLoaded', () => {
+
+    // Hide Context Menu by default
     $contextMenu = $('#context-menu')
         .hide();
 
-    // Store current mouse position in mousePos
+    // Init mouse position and dragged element
+    var mousePos = { x: 0, y: 0 };
+	var dragOffset = { x: 0, y: 0 };
+	var $draggedElement = undefined;
+
+    // On Mouse Move event
     $(document).on('mousemove', function(e) {
+		// Upade saved mouse pos
         mousePos.x = e.pageX;
         mousePos.y = e.pageY;
+		
+		// If an element is being dragged, update it's position
+		if ($draggedElement != undefined) {
+			$draggedElement.css({
+				'left': mousePos.x - dragOffset.x,
+				'top': mousePos.y - dragOffset.y
+			});
+		}
     })
+
+    /* PANELS */
+    
+	// On Mouse Down event on drag handle
+	$('.drag-handle').on('mousedown', function() {
+		// Get position of draggable element that was clicked
+		let $panel = $(this).closest('.panel');
+		let panelPos = {
+			x: $panel.css('left').replace(/[^-\d\.]/g, ''),
+			y: $panel.css('top').replace(/[^-\d\.]/g, '')
+		};
+		
+		// Calculate/store the offset from the element topleft corner to the mouse
+		dragOffset.x = mousePos.x - panelPos.x;
+		dragOffset.y = mousePos.y - panelPos.y;
+		
+		// Store the currently dragged element
+		$draggedElement = $panel;
+	});
+
+	// On Mouse Up event
+	$(document).on('mouseup', function() {
+		// Clear the currently dragged element
+		$draggedElement = undefined;
+	});
+	
+	// Handle click event on show/hide button
+	$('.showhide-btn').on('click', function() {
+		$panel = $(this).closest('.panel');
+		$(".panel-row:not(:first-child)", $panel).toggle();
+		if ($panel.hasClass('collapsed')) $panel.removeClass('collapsed');
+		else $panel.addClass('collapsed');
+	})
+	
+	// Handle click on close button
+	$('.close-btn').on('click', function() {
+		$panel = $(this).closest('.panel');
+		$panel.remove();
+	})
+	
+	/*  Preferences input */	
+	$('input').on('change', function() {
+		var $this = $(this);
+		switch ($this.attr('id')) {
+			case 'pref-autodetect':
+				let prefGame = document.getElementById('pref-game');
+				if ($this.is(':checked')) {
+					prefGame.disabled = true;
+				} else {
+					prefGame.disabled = false;
+				}
+				break;
+			default:
+				break;
+		}
+	})
 
     /* TITLEBAR */
 
@@ -110,8 +180,10 @@ window.addEventListener('DOMContentLoaded', () => {
         targetNode = $(this).find('title').text();
         $('.copy-address').text('Copy address 0x' + targetNode);
         $('.copy-address').attr('address', targetNode);
-        $contextMenu.css('left', mousePos.x);
-        $contextMenu.css('top', mousePos.y);
+        $contextMenu.css({
+            'left': mousePos.x,
+            'top': mousePos.y
+        });
         $contextMenu.show();
     })
 

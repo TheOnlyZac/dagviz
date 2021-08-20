@@ -4,13 +4,15 @@ html, body, body * {
 }
 
 body {
-    font-family: sans-serif;
+    font-family: Calibri, Segoe UI, sans-serif;
+
+    background-color: #eeeeee;
 
     user-select: none;
+	overflow: hidden;
 }
 
 /* TITLEBAR */
-
 #titlebar {
     display: grid;
     grid-template-columns: auto auto auto;
@@ -31,13 +33,12 @@ body {
     box-sizing: border-box;
     
     -webkit-app-region: drag;
+    z-index: 999 !important;
 }
 
 .favicon {
     height: 15px;
     padding-right: 10px;
-
-    filter: drop-shadow(10);
 }
 
 #win-controls {
@@ -61,7 +62,6 @@ body {
 }
 
 /* GRAPH */
-
 #graph-container {
     position: fixed;
     top: 0;
@@ -88,31 +88,6 @@ body {
 }
 
 /* GUI */
-
-#gui {
-    display: inline-block;
-}
-
-.box {
-    display: inline-block;
-    margin: 5px;
-    padding: 7px 12px 7px 12px;
-
-    width: auto;
-
-    color: #0e0e0e;
-    font-family: Calibri, Helvetica;
-
-    background-color: rgba(255, 255, 255, 0.9); /* light */
-    /* background-color: rgba(128, 128, 128, 0.9); dark */
-    box-shadow: 0px 0px 5px gray;
-    border-radius: 3px;
-}
-
-#context-menu {
-    position: absolute;
-}
-
 .context-btn {
     padding: 2px;
 
@@ -121,4 +96,78 @@ body {
 
 .context-btn:hover {
     background-color: rgba(200, 200, 200, 0.8)
+}
+
+/* PANELS */
+.panel {
+	display: flex;
+	flex-direction: column;
+	
+	position: absolute;
+	float: left;
+	
+	margin: 5px;
+
+    border-radius: 5px;
+	
+	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.15);
+	
+	user-select: none;
+	backdrop-filter: blur(3px) brightness(80%);
+}
+
+.panel-row {
+	display: grid;
+	grid-template-columns: auto auto;
+	justify-content: space-between;
+	align-items: center;
+	grid-gap: 10px;
+	
+	padding: 4px 15px 4px 15px;
+	
+	background-color: rgba(255, 255, 255, 0.75);
+}
+
+.panel-row:first-child {
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+.panel-row:last-child {
+	padding-bottom: 10px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.panel-row:nth-child(2) {
+	padding-top: 10px;
+}
+
+.panel-title {
+	padding-top: 6px;
+	padding-bottom: 6px;
+	
+	background-color: rgba(255, 255, 255, 0.85);
+	border-radius: 5px 5px 0px 0px;
+}
+
+.collapsed > .panel-row:first-child {
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.panel-title p {
+	font-weight: bold;
+}
+
+input[type="text"] {
+width: 120px;
+}
+
+.showhide-btn, .close-btn {
+	cursor: pointer;
+}
+
+.drag-handle {
+	cursor: move;
 }
