@@ -30,7 +30,9 @@ const BUILDS = Object.freeze({
     sly3sep: 4
 });
 
+// Settings
 let autoDetectBuild = true;
+let nodesDisplay = 'name';
 
 // Declare DAG and tasks dict
 let dag;
@@ -131,9 +133,16 @@ class Node {
             0: red
             1: green
             2: blue
-            3: gray
-        */
-        let name = this.name;
+            3: gray */
+    
+        let label;
+        if (nodesDisplay == 'name') {
+            label = this.name
+        } else if (nodesDisplay == 'address') {
+            label = hex(this.address);
+        } else {
+            label = this.id;
+        }
         let tooltip = this.description.split('"').join('\\"');
         let fillcolor = ['#F77272', '#9EE89B', '#61D6F0', '#C2C2C2'][this.state];
         let color = ['#8A0808', '#207F1D', '#0C687D', '#4E4E4E'][this.state];
@@ -142,7 +151,7 @@ class Node {
                 ? 'octagon'
                 : 'oval'
             : 'diamond';
-        return `[label="${name}" tooltip="${tooltip}" fillcolor="${fillcolor}" ` +
+        return `[label="${label}" tooltip="${tooltip}" fillcolor="${fillcolor}" ` +
                 `color="${color}" shape="${shape}" width=1 height=0.5]`;
     }
 
@@ -319,7 +328,7 @@ class Graph {
         // init digraph with default styles for graph/node
         let dots = [
             'digraph {',
-            'graph [style="bold, rounded" bgcolor="#ffffffff" fontname="courier"]',
+            'graph [style="bold, rounded" bgcolor="#ffffff00" fontname="courier"]',
             'node [style="filled, bold, rounded" fontname="calibri" fontcolor="black" shape="oval"]',
             'fillcolor="#ffffff00"'
         ];
@@ -444,7 +453,7 @@ ipc.on('set-settings', function(event, store) {
     console.log(store);
     autoDetectBuild = store['auto-detect-build'];
     if (!autoDetectBuild) BUILD = BUILDS[store['build']];
-    var nodesDisplay = store['nodes-display'];
+    nodesDisplay = store['nodes-display'];
     var baseAddress = store['base-address'];
 })
 
@@ -475,8 +484,8 @@ function createWindow() {
     win.loadFile('index.html');
 
     // Open the dev tools on the main window
-    win.webContents.openDevTools()
-    console.log("DO NOT FORGET TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
+    //win.webContents.openDevTools()
+    //console.log("DO NOT FORGET TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
 
     // Return the new BrowserWindow
     return win;

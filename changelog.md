@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.0
+* Implemented floating UI panels
+* Added Settings panel
+  - Added setting to manually set game build 
+  - Added setting to change node display text 
+
 ## v0.5.0
 * App doesn't crash when PCSX2 or Sly aren't running
 * Added task names/descriptions for Sly2 Ep1 and Ep3

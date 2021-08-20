@@ -65,7 +65,16 @@ ipc.on('no-game', function(event, store) {
 
 /* Manage GUI */
 
-// GUI elements
+// Send current settings values to main.js
+function sendSettings() {
+    var settings = {
+        'auto-detect-build': $('#pref-autodetect').is(':checked'),
+        'build': $('#pref-build').val(),
+        'nodes-display': $('#pref-nodes-display').val(),
+        'base-address': $('#pref-base-address').val()
+    };
+    ipc.send('set-settings', settings);
+}
 
 // Handle receiveing world ID from main.js
 ipc.on('world-id', function(event, store) {
@@ -151,8 +160,12 @@ window.addEventListener('DOMContentLoaded', () => {
 		$panel.remove();
 	})
 
+
+    // Send initial settings to main.js
+    sendSettings();
+
+    // Handle changed input/select element
 	$('input, select').on('change', function() {
-        console.log("input change");
 		var $this = $(this);
         if ($this.attr('id') == 'pref-autodetect') {
             let prefBuild = document.getElementById('pref-build');
@@ -163,13 +176,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 $(prefBuild).val('none');
             }
         }
-        var settings = {
-            'auto-detect-build': $('#pref-autodetect').is(':checked'),
-            'build': $('#pref-build').val(),
-            'nodes-display': $('#pref-nodes-display').val(),
-            'base-address': $('#pref-base-address').val()
-        };
-        ipc.send('set-settings', settings);
+        // Send updated settings to main.js
+        sendSettings();
 	})
 
     /* TITLEBAR */
