@@ -97,10 +97,6 @@ ipc.on('alert', function(event, store) {
 // Wait for document ready
 window.addEventListener('DOMContentLoaded', () => {
 
-    // Hide Context Menu by default
-    $contextMenu = $('#context-menu')
-        .hide();
-
     /* PANELS */
 
     // Init mouse position and dragged element
@@ -146,7 +142,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		$draggedElement = undefined;
 	});
 	
-	// Handle click event on show/hide button
+	// Handle click event on panel show/hide button
 	$('.showhide-btn').on('click', function() {
 		$panel = $(this).closest('.panel');
 		$(".panel-row:not(:first-child)", $panel).toggle();
@@ -154,12 +150,11 @@ window.addEventListener('DOMContentLoaded', () => {
 		else $panel.addClass('collapsed');
 	})
 	
-	// Handle click on close button
+	// Handle click on panel close button
 	$('.close-btn').on('click', function() {
 		$panel = $(this).closest('.panel');
 		$panel.remove();
 	})
-
 
     // Send initial settings to main.js
     sendSettings();
@@ -191,7 +186,12 @@ window.addEventListener('DOMContentLoaded', () => {
     // Handle close window
     $(document).on('click', '.win-close', () => window.close())
 
+
     /* CONTEXT MENU */
+    
+    // Hide Context Menu by default
+    $contextMenu = $('#context-menu')
+        .hide();
 
     // On click, hide context menu
     $(document).on('click', function() {

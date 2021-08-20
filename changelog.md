@@ -3,8 +3,9 @@
 ## v0.6.0
 * Implemented floating UI panels
 * Added Settings panel
-  - Added setting to manually set game build 
-  - Added setting to change node display text 
+  - Added option to manually set game build
+  - Added setting to change node display text
+* Updated gui styles to match panel UI
 
 ## v0.5.0
 * App doesn't crash when PCSX2 or Sly aren't running
