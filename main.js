@@ -140,6 +140,8 @@ class Node {
             label = this.name
         } else if (nodesDisplay == 'address') {
             label = hex(this.address);
+        } else if (nodesDisplay == 'state') {
+            label = this.state;
         } else {
             label = this.id;
         }
