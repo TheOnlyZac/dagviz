@@ -138,8 +138,10 @@ class Node {
         let label;
         if (nodesDisplay == 'name') {
             label = this.name
+        } else if (nodesDisplay == 'id-hex') {
+            label = '0x' + hex(this.id);
         } else if (nodesDisplay == 'address') {
-            label = hex(this.address);
+            label = '0x' + hex(this.address);
         } else if (nodesDisplay == 'state') {
             label = this.state;
         } else {
@@ -452,7 +454,6 @@ ipc.on('export-dot', function() {
 })
 
 ipc.on('set-settings', function(event, store) {
-    console.log(store);
     autoDetectBuild = store['auto-detect-build'];
     if (!autoDetectBuild) BUILD = BUILDS[store['build']];
     nodesDisplay = store['nodes-display'];

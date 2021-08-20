@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.1
+* Fixed window title
+* Added Task ID (hex) option for node display text
+
 ## v0.6.0
 * Implemented floating UI panels
 * Added Settings panel
