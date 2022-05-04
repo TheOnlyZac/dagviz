@@ -1,11 +1,11 @@
 {
   "name": "dagedit",
-  "version": "0.6.1",
-  "description": "A real-time save editor for Sly 2 and Sly 3",
+  "version": "0.6.2",
+  "description": "A game-state save editor for Sly 2 and Sly 3",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . DAGedit --platform=win32 --arch=x64 --overwrite"
+    "build": "electron-packager . DAGviz --platform=win32 --arch=x64 --overwrite"
   },
   "author": "TheOnlyZac",
   "license": "ISC",
