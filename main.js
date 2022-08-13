@@ -126,7 +126,7 @@ class Node {
         if ((BUILD == BUILDS.sly2ntsc) && (this.id in tasks[BUILDS.sly2ntsc.retail])) {
             return tasks[BUILDS.sly2ntsc.retail][this.id].name;
         } else {
-            return this.address;
+            return '0x' + hex(this.address);
         }
     }
 
@@ -434,25 +434,21 @@ function detectGame() {
     var buildString = '';
     // Sly 2 - Retail
     if (buildString = readMemory(0x15b90, memoryjs.STRING), buildString.indexOf('973.16') > -1) {
-        console.log("Build is Sly 2 retail (" + buildString + ")");
         GAME = 0;
         BUILD = BUILDS.sly2ntsc;
     }
     // Sly 3 - July
     else if (buildString = readMemory(0x33e838, memoryjs.STRING), buildString.indexOf('0716.1854') > -1) {
-        console.log("Build is Sly 3 July (" + buildString + ")");
         GAME = 1;
         BUILD = BUILDS.sly3jul;
     }
     // Sly 3 - Retail
     else if (buildString = readMemory(0x15390, memoryjs.STRING), buildString.indexOf('974.64') > -1) {
-        console.log("Build is Sly 3 retail (" + buildString + ")");
         GAME = 1;
         BUILD = BUILDS.sly3ntsc;
     }
     // Sly 2 - March Proto
     else if (buildString = readMemory(0x15b90, memoryjs.STRING), buildString.indexOf('971.98') > -1) {
-        console.log("Build is Sly 2 retail (" + buildString + ")");
         GAME = 0;
         BUILD = BUILDS.sly2mar;
     } else { // Invalid/Unsupported build
