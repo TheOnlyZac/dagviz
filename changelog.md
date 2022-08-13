@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.1
+* Added support for Sly 3 July build
+* Tweaked UI icons
+* Changed default node text to address
+
 ## v0.6
 * Implemented floating UI panels
 * Added Settings panel

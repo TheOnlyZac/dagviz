@@ -28,11 +28,11 @@
     <div id="context-menu" class="panel">
         <div class="panel-row context-btn copy-address">Node address: 0x<span class="node-address"></span></div>
         <hr/>
-        <!--<div class="context-btn force-state" data-state=0><p>Set state to Unavailable</p></div>-->
-        <!--<div class="context-btn force-state" data-state=1>Set state to Available</div>
+        <div class="context-btn force-state" data-state=0><p>Set state to Unavailable</p></div>
+        <div class="context-btn force-state" data-state=1>Set state to Available</div>
         <div class="context-btn force-state" data-state=2>Set state to Complete</div>
         <div class="context-btn force-state" data-state=3>Set state to Final</div>
-        <hr/>-->
+        <hr/>
         <div class="panel-row context-btn reset-dag">Reset all tasks</div>
         <div class="panel-row context-btn refresh-dag">Refresh graph</div>
         <hr/>
@@ -42,11 +42,10 @@
     
     <!-- PREFERENCES PANEL -->
     <div id="preferences" class="panel">
-        <div class="panel-row panel-title">
+        <div class="panel-row panel-title drag-handle">
             <p>Settings</p>
             <div>
-                <span class="showhide-btn">👁</span>
-                <span class="drag-handle">✥</span>
+                <span class="showhide-btn"><b>—</b></span>
             </div>
         </div>
         
@@ -70,6 +69,7 @@
                     <option value="sly2mar" disabled>Sly 2 March Proto</option>
                     <option value="sly3aug" disabled>Sly 3 August Proto</option>
                     <option value="sly3sep" disabled>Sly 3 Sept Proto</option>
+                    <option value="sly3jul">Sly 3 July Proto</option>
                 </optgroup>
             </select>
         </div>

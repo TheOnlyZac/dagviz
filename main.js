@@ -27,8 +27,27 @@ const BUILDS = Object.freeze({
     sly3ntsc: 1,
     sly2mar: 2,
     sly3aug: 3,
-    sly3sep: 4
+    sly3sep: 4,
+    sly3jul: 5
 });
+
+const headAdrs = Object.freeze([
+    0x3e0b04, // 0
+    0x478c8c, // 1
+    0x3EE52C, // 2
+    0x000000, // 3
+    0x000000, // 4
+    0x46aef4 // 5
+]);
+
+const worldIdAdrs = Object.freeze([
+    0x3D4A60, // 0
+    0x468D30, // 1
+    0x45C398, // 2
+    0x000000, // 3
+    0x000000, // 4
+    0x45AFB0 // 5
+]);
 
 // Settings
 let autoDetectBuild = true;
@@ -107,7 +126,7 @@ class Node {
         if ((BUILD == BUILDS.sly2ntsc) && (this.id in tasks[BUILDS.sly2ntsc.retail])) {
             return tasks[BUILDS.sly2ntsc.retail][this.id].name;
         } else {
-            return this.id;
+            return this.address;
         }
     }
 
@@ -412,17 +431,32 @@ function detectGame() {
     var sly2Pid = readMemory(0x15b90, memoryjs.STRING);
     var sly3Pid = readMemory(0x15390, memoryjs.STRING);
 
-    if (sly2Pid.indexOf('SCUS_973.16') > -1) { // Sly 2 Retail '73.1'
+    var buildString = '';
+    // Sly 2 - Retail
+    if (buildString = readMemory(0x15b90, memoryjs.STRING), buildString.indexOf('973.16') > -1) {
+        console.log("Build is Sly 2 retail (" + buildString + ")");
         GAME = 0;
         BUILD = BUILDS.sly2ntsc;
-    } else if (sly3Pid.indexOf('SCUS_974.64') > -1) { // Sly 3 Retail '74.6'
+    }
+    // Sly 3 - July
+    else if (buildString = readMemory(0x33e838, memoryjs.STRING), buildString.indexOf('0716.1854') > -1) {
+        console.log("Build is Sly 3 July (" + buildString + ")");
+        GAME = 1;
+        BUILD = BUILDS.sly3jul;
+    }
+    // Sly 3 - Retail
+    else if (buildString = readMemory(0x15390, memoryjs.STRING), buildString.indexOf('974.64') > -1) {
+        console.log("Build is Sly 3 retail (" + buildString + ")");
         GAME = 1;
         BUILD = BUILDS.sly3ntsc;
-    } else if (sly2Pid.indexOf('SCUS_971.98') > -1) { // Sly 2 March Proto '71.9'
+    }
+    // Sly 2 - March Proto
+    else if (buildString = readMemory(0x15b90, memoryjs.STRING), buildString.indexOf('971.98') > -1) {
+        console.log("Build is Sly 2 retail (" + buildString + ")");
         GAME = 0;
         BUILD = BUILDS.sly2mar;
     } else { // Invalid/Unsupported build
-        //console.log("Invalid game detected. Make sure Sly 2 or 3 (NTSC) is running.");
+        console.log("Invalid game detected (" + buildString + "). Make sure Sly 2 or 3 (NTSC) is running. (");
         GAME = BUILD = -1;
     }
 }
@@ -532,10 +566,10 @@ app.whenReady().then(() => {
                 win.webContents.send('no-game', 'Game not detected.');
             } else {
                 // Set DAG head node
-                var headAddr = [0x3e0b04, 0x478c8c, 0x3EE52C][BUILD];
+                var headAddr = headAdrs[BUILD];
 
                 // Read World ID from memory
-                var worldAddr = [0x3D4A60, 0x468D30, 0x45C398][BUILD]
+                var worldAddr = worldIdAdrs[BUILD]
                 var worldId = readMemory(worldAddr, memoryjs.UINT32);
 
                 // Convert Sly 3 world IDs to episode IDs

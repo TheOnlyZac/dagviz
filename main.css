@@ -169,7 +169,7 @@ width: 120px;
 }
 
 .drag-handle {
-	cursor: move;
+	/*cursor: move;*/
 }
 
 #preferences {
