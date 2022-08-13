@@ -14,25 +14,39 @@ A real-time game-state editor for Sly 2 and Sly 3.
 * Plain-english node labels based on task descriptions
 * Changes to DAG persist between reloads
 
-## Getting Started
-Clone the repo and cd into the project directory. Run `npm install` to download dependencies, then `npm start` to launch the app. You can also build the exe with `npm run-script build`, or download a release version from the [Releases](https://github.com/TheOnlyZac/DAGedit/releases/) tab.
+## How to use
+* `git clone https://github.com/theonlyzac/dagviz.git`
+* `npm install` to install dependencies
+* `npm start` to run the app
 
-Make sure PCSX2 is running and Sly 2 or 3 (NTSC) is loaded, or else the app won't open. It will take a moment to populate the DAG.
+Use the scroll wheel to zoom in/out and click + drag to pan the current view.
 
-When the window appears, if you do not see the graph, it is probably off screen. Zoom out with the scroll wheel, and click/drag to pan the graph.
+Right click a node to see some options. From here you can copy the memory address of the node, change its state, or export the current DAG.
+
+## Building
+You can build an exe with `npm run-script build`. Release builds are available on the [Releases](https://github.com/TheOnlyZac/DAGedit/releases/) tab.
+
+### Troubleshooting
+Make sure PCSX2 is open and Sly 2 or 3 (NTSC) is running. It may take a moment to populate the DAG.
+
+If it says the correct episode in the top-left but you do not see the DAG, it is probably off-screen. Zoom out with the scroll wheel, and/or click+drag to find it.
+
+If it is not detecting that the game is running, uncheck the "Auto-detect build" box and set the game build manually. Please submit an issue saying which build and which map you were playing on.
 
 ## About the DAG
 Each node corresponds to a task, and tasks are color-coded by their state:
-* Red is Unavailable (0)
-* Green is Available (1)
-* Blue is Complete (2)
-* Gray is Final (3)
+* Red – Unavailable (0)
+* Green – Available (1)
+* Blue – Complete (2)
+* Gray — Final (3)
 
-By default, each node displays it's unique ID. You can view/copy the memory address of a node from the right-click menu. Nodes do have descriptive plain-english names in the game's code, but as of now there is no method to extract those from the game, so the ID is the next best thing.
+By default, each node displays it's unique ID. You can change this using the "Nodes display" option.
+
+Nodes do have descriptive plain-english names in the game's code, but as of now there is no method to extract those from the game, so the ID is the next best thing.
 
 Diamond-shaped tasks have checkpoints. When you die, you respawn at the last targeted checkpoint.
 
-Each box/cluster of tasks is one job. Once a job is finished, all the Complete tasks in that job are set to Final.
+Each box/cluster of tasks is one mission. Once a job is finished, all the Complete tasks in that job are set to Final.
 
 # Further Reading
 For more information on the structure and function of the DAG, see [The Picture Worth a Thousand Bugs](https://youtu.be/Yl20uIQ3fEw), a GDC 2005 presentation by Bruce Oberg (the lead programmer on Sly 2).
