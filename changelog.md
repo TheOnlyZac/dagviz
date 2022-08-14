@@ -16,8 +16,8 @@
 
 ## v0.5
 * App doesn't crash when PCSX2 or Sly aren't running
-* Added task names/descriptions for Sly2 Ep1 and Ep3
-  - Special thanks to Sami for helping identify tasks
+* Added task names/descriptions for Sly 2 Episodes 1 and 3
+  - Special thanks to [https://github.com/zzamizz zzamizz] for helping identify tasks by name
 * Tweaked graph appearance
 * Added app icon and custom titlebar
 * Temporarily removed state forcing (broken)

@@ -23,7 +23,7 @@ Use the scroll wheel to zoom in/out and click + drag to pan the current view.
 
 Right click a node to see some options. From here you can copy the memory address of the node, change its state, or export the current DAG.
 
-## Building
+### Building
 You can build an exe with `npm run-script build`. Release builds are available on the [Releases](https://github.com/TheOnlyZac/DAGedit/releases/) tab.
 
 ### Troubleshooting
