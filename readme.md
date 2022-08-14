@@ -1,7 +1,7 @@
 # DAGviz
 A real-time game-state editor for Sly 2 and Sly 3.
 
-<img src="img/thumb.png" alt="A screenshot of DAGedit." style="align: right; margin: 10px; width: 400px">
+<img src="img/thumb.png" alt="A screenshot of DAGviz." align="right" style="float: right; margin: 10px; width: 400px">
 
 ## Features
 * Explore the DAG view task connections
