@@ -1,7 +1,7 @@
 {
-  "name": "dagedit",
+  "name": "dagviz",
   "version": "0.6.2",
-  "description": "A game-state save editor for Sly 2 and Sly 3",
+  "description": "A real-time game state editor for Sly 2 and Sly 3",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -10,11 +10,11 @@
   "author": "TheOnlyZac",
   "license": "ISC",
   "devDependencies": {
+    "electron": "^15.5.7",
     "electron-packager": "^15.3.0"
   },
   "dependencies": {
     "d3-graphviz": "^4.0.0",
-    "electron": "^15.5.5",
     "jquery": "^3.6.0",
     "memoryjs": "^3.4.0",
     "save-svg-as-png": "^1.4.17"
