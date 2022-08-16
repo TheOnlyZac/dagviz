@@ -3,7 +3,8 @@
 ## v0.6.1
 * Added support for Sly 3 July build
 * Tweaked UI icons
-* Changed default node text to address
+* Changed fallback node text to address
+* Fixed an issue with incorrect file paths in release builds
 
 ## v0.6
 * Implemented floating UI panels
@@ -17,7 +18,7 @@
 ## v0.5
 * App doesn't crash when PCSX2 or Sly aren't running
 * Added task names/descriptions for Sly 2 Episodes 1 and 3
-  - Special thanks to [https://github.com/zzamizz zzamizz] for helping identify tasks by name
+  - Special thanks to [https://github.com/zzamizz](zzamizz) for helping identify tasks by name
 * Tweaked graph appearance
 * Added app icon and custom titlebar
 * Temporarily removed state forcing (broken)

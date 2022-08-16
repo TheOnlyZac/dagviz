@@ -3,7 +3,7 @@ var d3 = require('d3-graphviz');
 var save = require('save-svg-as-png');
 window.$ = window.jQuery = require('jquery');
 
-const BUILDS = ['sly2ntsc', 'sly3ntsc', 'sly2mar', 'sly3aug', 'sly3sep'];
+const BUILDS = ['sly2ntsc', 'sly3ntsc', 'sly2mar', 'sly3aug', 'sly3sep', 'sly3jul'];
 
 /* Manage graph */
 

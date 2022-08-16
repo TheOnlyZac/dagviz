@@ -537,7 +537,8 @@ app.whenReady().then(() => {
     })
 
     // Load task names/descriptions from JSON file
-    let rawdata = fs.readFileSync('tasks-sly2.json');
+    let jsonPath = path.join(__dirname, 'tasks-sly2.json')
+    let rawdata = fs.readFileSync(jsonPath);
     tasks[BUILDS.sly2ntsc.retail] = JSON.parse(rawdata);
 
     // Init empty Graph
