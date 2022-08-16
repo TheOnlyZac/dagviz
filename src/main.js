@@ -514,7 +514,8 @@ function createWindow() {
     })
 
     // Load the app index.html
-    win.loadFile('index.html');
+    let htmlPath = path.join(__dirname, 'index.html');
+    win.loadFile(htmlPath);
 
     // Open the dev tools on the main window
     //win.webContents.openDevTools()

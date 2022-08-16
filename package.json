@@ -2,7 +2,7 @@
   "name": "dagviz",
   "version": "0.6.2",
   "description": "A real-time game state editor for Sly 2 and Sly 3",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-packager . DAGviz --platform=win32 --arch=x64 --overwrite --no-optional"
