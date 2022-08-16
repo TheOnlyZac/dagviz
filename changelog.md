@@ -1,19 +1,14 @@
 # Changelog
 
-## v0.6.1
-* Added support for Sly 3 July build
-* Tweaked UI icons
-* Changed fallback node text to address
-* Fixed an issue with incorrect file paths in release builds
-
 ## v0.6
-* Implemented floating UI panels
+* Updated UI and implemented floating panels
 * Added Settings panel
   - Added option to manually set game build
   - Added setting to change node display text
-* Updated gui styles to match panel UI
 * Added Task ID (hex) option for node display text
-
+* Added support for Sly 3 July build
+* Changed default node text to address
+* Fixed an issue with incorrect file paths in release builds
 
 ## v0.5
 * App doesn't crash when PCSX2 or Sly aren't running
