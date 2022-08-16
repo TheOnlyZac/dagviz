@@ -494,8 +494,8 @@ ipc.on('set-settings', function(event, store) {
 function createWindow() {
     // Initialize new window
     const win = new BrowserWindow({
-        width: 600,
-        height: 800,
+        width: 700,
+        height: 700,
         icon: 'img/appicon.png',
         transparent: false,
         frame: false,
@@ -518,8 +518,8 @@ function createWindow() {
     win.loadFile(htmlPath);
 
     // Open the dev tools on the main window
-    //win.webContents.openDevTools()
-    //console.log("DO NOT FORGET TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
+    win.webContents.openDevTools()
+    console.log("DO NOT FORGET TO DISABLE DEV TOOLS BEFORE BUILDING RELEASE VERSION");
 
     // Return the new BrowserWindow
     return win;

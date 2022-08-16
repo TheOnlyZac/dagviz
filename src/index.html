@@ -12,6 +12,7 @@
     <title>DAGviz v0.6.1 by TheOnlyZac</title>
 </head>
 <body>
+    <!-- TITLE BAR -->
     <div id="titlebar">
         <img class="favicon" src="../img/favicon.png"/>
         <p>DAGviz v0.6.1 by TheOnlyZac</p>
@@ -20,19 +21,24 @@
             <img class="win-icon win-max" src="../img/maximize.png"></img>
             <img class="win-icon win-close" src="../img/close.png"></img>
         </div>
-    </div>       
-    <div id="episode-titlebox" class="panel">
-        <h1 id="episode-title" class="panel-row">DAGviz</h1>
     </div>
 
+<!--
+    <div id="episode-titlebox" class="panel">
+        <h1 id="episode-title" class="panel-row">DAGviz</h1>
+    </div> -->
+
+    <!-- RIGHT-CLICK MENU -->
     <div id="context-menu" class="panel">
-        <div class="panel-row context-btn copy-address">Node address: 0x<span class="node-address"></span></div>
-        <hr/>
-        <div class="panel-row context-btn force-state" data-state=0><p>Set state to Unavailable</p></div>
-        <div class="panel-row context-btn force-state" data-state=1>Set state to Available</div>
-        <div class="panel-row context-btn force-state" data-state=2>Set state to Complete</div>
-        <div class="panel-row context-btn force-state" data-state=3>Set state to Final</div>
-        <hr/>
+        <div id="context-group-node">
+            <div class="panel-row context-btn copy-address">Node address: 0x<span class="node-address"></span></div>
+            <hr/>
+            <div class="panel-row context-btn force-state" data-state=0><p>Set state to Unavailable</p></div>
+            <div class="panel-row context-btn force-state" data-state=1>Set state to Available</div>
+            <div class="panel-row context-btn force-state" data-state=2>Set state to Complete</div>
+            <div class="panel-row context-btn force-state" data-state=3>Set state to Final</div>
+            <hr/>
+        </div>
         <div class="panel-row context-btn reset-dag">Reset all tasks</div>
         <div class="panel-row context-btn refresh-dag">Refresh graph</div>
         <hr/>
@@ -43,7 +49,7 @@
     <!-- PREFERENCES PANEL -->
     <div id="preferences" class="panel">
         <div class="panel-row panel-title drag-handle">
-            <p>Settings</p>
+            <p id="episode-title">DAGviz</p>
             <div>
                 <span class="showhide-btn"><b>—</b></span>
             </div>

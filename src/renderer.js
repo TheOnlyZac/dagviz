@@ -199,7 +199,7 @@ window.addEventListener('DOMContentLoaded', () => {
     })
 
     // On right-clicking a node, show context menu at mouse position
-    $(document).on('contextmenu', '.node', function() {
+    $(document).on('contextmenu', '.node', function(e) {
         targetNode = $(this).find('title').text();
         $('.copy-address').text('Copy address 0x' + targetNode);
         $('.copy-address').attr('address', targetNode);
