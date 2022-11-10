@@ -10,7 +10,7 @@
   "author": "TheOnlyZac",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^15.5.7",
+    "electron": "^18.3.7",
     "electron-packager": "^15.3.0"
   },
   "dependencies": {
