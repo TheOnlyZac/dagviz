@@ -10,8 +10,8 @@
   "author": "TheOnlyZac",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^15.5.7",
-    "electron-packager": "^15.3.0"
+    "electron": "^22.0.0",
+    "electron-packager": "^17.1.1"
   },
   "dependencies": {
     "d3-graphviz": "^4.0.0",
