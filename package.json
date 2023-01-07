@@ -14,7 +14,7 @@
     "electron-packager": "^17.1.1"
   },
   "dependencies": {
-    "d3-graphviz": "^4.0.0",
+    "d3-graphviz": "^5.0.2",
     "jquery": "^3.6.0",
     "memoryjs": "^3.5.1",
     "save-svg-as-png": "^1.4.17"
